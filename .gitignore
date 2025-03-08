@@ -26,4 +26,4 @@ screenshots/
 expected/
 errors/
 imgcmp.exe
-
+vendor/
