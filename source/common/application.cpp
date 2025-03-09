@@ -13,14 +13,14 @@
 #include <flags/flags.h>
 
 // Include the Dear ImGui implementation headers
-// #define IMGUI_IMPL_OPENGL_LOADER_GLAD2
-// #include <imgui_impl/imgui_impl_glfw.h>
-// #include <imgui_impl/imgui_impl_opengl3.h>
+#define IMGUI_IMPL_OPENGL_LOADER_GLAD2
+#include <imgui_impl/imgui_impl_glfw.h>
+#include <imgui_impl/imgui_impl_opengl3.h>
 
-// #if !defined(NDEBUG)
-// // If NDEBUG (no debug) is not defined, enable OpenGL debug messages
-// #define ENABLE_OPENGL_DEBUG_MESSAGES
-// #endif
+#if !defined(NDEBUG)
+// If NDEBUG (no debug) is not defined, enable OpenGL debug messages
+#define ENABLE_OPENGL_DEBUG_MESSAGES
+#endif
 
 #include "texture/screenshot.hpp"
 
@@ -29,7 +29,7 @@ std::string default_screenshot_filepath() {
     auto time = std::time(nullptr);
     
     struct tm localtime;
-    localtime_r(&time, &localtime);
+    localtime_s(&localtime, &time);
     stream << "screenshots/screenshot-" << std::put_time(&localtime, "%Y-%m-%d-%H-%M-%S") << ".png";
     return stream.str();
 }
@@ -200,15 +200,15 @@ int our::Application::run(int run_for_frames) {
     keyboard.enable(window);
     mouse.enable(window);
 
-    // // Start the ImGui context and set dark style (just my preference :D)
-    // IMGUI_CHECKVERSION();
-    // ImGui::CreateContext();
-    // ImGuiIO& io = ImGui::GetIO();
-    // ImGui::StyleColorsDark();
+    // Start the ImGui context and set dark style (just my preference :D)
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui::StyleColorsDark();
 
-    // // Initialize ImGui for GLFW and OpenGL
-    // ImGui_ImplGlfw_InitForOpenGL(window, true);
-    // ImGui_ImplOpenGL3_Init("#version 330 core");
+    // Initialize ImGui for GLFW and OpenGL
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
 
     // This part of the code extracts the list of requested screenshots and puts them into a priority queue
     using ScreenshotRequest = std::pair<int, std::string>;
@@ -245,19 +245,19 @@ int our::Application::run(int run_for_frames) {
         glfwPollEvents(); // Read all the user events and call relevant callbacks.
 
         // Start a new ImGui frame
-        // ImGui_ImplOpenGL3_NewFrame();
-        // ImGui_ImplGlfw_NewFrame();
-        // ImGui::NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-        // if(currentState) currentState->onImmediateGui(); // Call to run any required Immediate GUI.
+        if(currentState) currentState->onImmediateGui(); // Call to run any required Immediate GUI.
 
         // If ImGui is using the mouse or keyboard, then we don't want the captured events to affect our keyboard and mouse objects.
         // For example, if you're focusing on an input and writing "W", the keyboard object shouldn't record this event.
-        // keyboard.setEnabled(!io.WantCaptureKeyboard, window);
-        // mouse.setEnabled(!io.WantCaptureMouse, window);
+        keyboard.setEnabled(!io.WantCaptureKeyboard, window);
+        mouse.setEnabled(!io.WantCaptureMouse, window);
 
         // Render the ImGui commands we called (this doesn't actually draw to the screen yet.
-        // ImGui::Render();
+        ImGui::Render();
 
         // Just in case ImGui changed the OpenGL viewport (the portion of the window to which we render the geometry),
         // we set it back to cover the whole window
@@ -271,17 +271,17 @@ int our::Application::run(int run_for_frames) {
         if(currentState) currentState->onDraw(current_frame_time - last_frame_time);
         last_frame_time = current_frame_time; // Then update the last frame start time (this frame is now the last frame)
 
-// #if defined(ENABLE_OPENGL_DEBUG_MESSAGES)
-//         // Since ImGui causes many messages to be thrown, we are temporarily disabling the debug messages till we render the ImGui
-//         glDisable(GL_DEBUG_OUTPUT);
-//         glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-// #endif
-//         // ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // Render the ImGui to the framebuffer
-// #if defined(ENABLE_OPENGL_DEBUG_MESSAGES)
-//         // Re-enable the debug messages
-//         glEnable(GL_DEBUG_OUTPUT);
-//         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-// #endif
+#if defined(ENABLE_OPENGL_DEBUG_MESSAGES)
+        // Since ImGui causes many messages to be thrown, we are temporarily disabling the debug messages till we render the ImGui
+        glDisable(GL_DEBUG_OUTPUT);
+        glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+#endif
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // Render the ImGui to the framebuffer
+#if defined(ENABLE_OPENGL_DEBUG_MESSAGES)
+        // Re-enable the debug messages
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+#endif
 
         // If F12 is pressed, take a screenshot
         if(keyboard.justPressed(GLFW_KEY_F12)){
@@ -329,10 +329,10 @@ int our::Application::run(int run_for_frames) {
     // Call for cleaning up
     if(currentState) currentState->onDestroy();
 
-    // // Shutdown ImGui & destroy the context
-    // ImGui_ImplOpenGL3_Shutdown();
-    // ImGui_ImplGlfw_Shutdown();
-    // ImGui::DestroyContext();
+    // Shutdown ImGui & destroy the context
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     // Destroy the window
     glfwDestroyWindow(window);
