@@ -12,5 +12,9 @@ uniform int size = 32;
 uniform vec3 colors[2];
 
 void main(){
-    frag_color = vec4(colors[0], 1.0);
+    vec2 uv = gl_FragCoord.xy;
+    int x = int(uv.x) / size;
+    int y = int(uv.y) / size;
+    int c = (x + y) % 2;
+    frag_color = vec4(colors[c], 1.0);
 }
