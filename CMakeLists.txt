@@ -17,18 +17,25 @@ add_subdirectory(vendor/glfw)                       # Build the GLFW project to 
 # A variable with all the source files of GLAD
 set(GLAD_SOURCE vendor/glad/src/gl.c)
 # A variables with all the source files of Dear ImGui
-set(IMGUI_SOURCES
-        vendor/imgui/imgui.cpp
-        vendor/imgui/imgui_demo.cpp
-        vendor/imgui/imgui_draw.cpp
-        vendor/imgui/imgui_widgets.cpp
-        vendor/imgui/imgui_impl/imgui_impl_glfw.cpp
-        vendor/imgui/imgui_impl/imgui_impl_opengl3.cpp
-        )
+
+if (WIN32)
+        set(IMGUI_SOURCES
+                vendor/imgui/imgui.cpp
+                vendor/imgui/imgui_demo.cpp
+                vendor/imgui/imgui_draw.cpp
+                vendor/imgui/imgui_widgets.cpp
+                vendor/imgui/imgui_impl/imgui_impl_glfw.cpp
+                vendor/imgui/imgui_impl/imgui_impl_opengl3.cpp
+                )
+endif()
 
 # Combine all vendor source files together into a single variable
-set(VENDOR_SOURCES ${GLAD_SOURCE} ${IMGUI_SOURCES})
+if(WIN32)
+        set(VENDOR_SOURCES ${GLAD_SOURCE} ${IMGUI_SOURCES})
+elseif(UNIX)
+        set(VENDOR_SOURCES ${GLAD_SOURCE})
 
+endif() 
 # A variable with all our source files that are common between executable targets (examples)
 set(COMMON_SOURCES
         source/common/application.hpp
