@@ -3,7 +3,10 @@
 #include <glm/vec2.hpp>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <imgui.h>
+
+#ifdef _WIN32
+    #include <imgui.h>
+#endif
 
 #include <string>
 #include <unordered_map>
