@@ -77,6 +77,8 @@ namespace our {
             setupFaceCulling();
             setupDepthTesting();
             setupBlending();
+            glColorMask(colorMask[0],colorMask[1],colorMask[2],colorMask[3]);
+            glDepthMask(depthMask);
         }
 
         // Given a json object, this function deserializes a PipelineState structure
