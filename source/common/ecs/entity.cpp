@@ -13,7 +13,7 @@ namespace our {
     glm::mat4 Entity::getLocalToWorldMatrix() const {
         //TODO: (Req 8) Write this function
         glm::mat4 worldMatrix=glm::mat4(1.0f);
-        Entity* entity=this;
+        const Entity* entity= this;
         while(entity) {
             worldMatrix=entity->localTransform.toMat4() * worldMatrix;
             entity=entity->parent;
