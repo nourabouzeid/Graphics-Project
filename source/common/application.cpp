@@ -13,9 +13,12 @@
 #include <flags/flags.h>
 
 // Include the Dear ImGui implementation headers
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD2
-#include <imgui_impl/imgui_impl_glfw.h>
-#include <imgui_impl/imgui_impl_opengl3.h>
+
+#ifdef _WIN32
+    #define IMGUI_IMPL_OPENGL_LOADER_GLAD2
+    #include <imgui_impl/imgui_impl_glfw.h>
+    #include <imgui_impl/imgui_impl_opengl3.h>
+#endif
 
 #if !defined(NDEBUG)
 // If NDEBUG (no debug) is not defined, enable OpenGL debug messages
@@ -29,11 +32,23 @@ std::string default_screenshot_filepath() {
     auto time = std::time(nullptr);
     
     struct tm localtime;
-    localtime_s(&localtime, &time);
+#ifdef _WIN32
+        localtime_s(&localtime, &time);
+#else
+        localtime_r(&time, &localtime);
+#endif
     stream << "screenshots/screenshot-" << std::put_time(&localtime, "%Y-%m-%d-%H-%M-%S") << ".png";
     return stream.str();
 }
 
+
+void getLocalTime(struct tm* localTime, time_t* currentTime) {
+    #ifdef _WIN32
+        localtime_s(localTime, currentTime);
+    #else
+        localtime_r(currentTime, localTime);
+    #endif
+}
 // This function will be used to log errors thrown by GLFW
 void glfw_error_callback(int error, const char* description){
     std::cerr << "GLFW Error: " << error << ": " << description << std::endl;
@@ -201,14 +216,16 @@ int our::Application::run(int run_for_frames) {
     mouse.enable(window);
 
     // Start the ImGui context and set dark style (just my preference :D)
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    ImGui::StyleColorsDark();
+    #ifdef _WIN32
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO();
+        ImGui::StyleColorsDark();
 
-    // Initialize ImGui for GLFW and OpenGL
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330 core");
+        // Initialize ImGui for GLFW and OpenGL
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplOpenGL3_Init("#version 330 core");
+    #endif
 
     // This part of the code extracts the list of requested screenshots and puts them into a priority queue
     using ScreenshotRequest = std::pair<int, std::string>;
@@ -244,10 +261,11 @@ int our::Application::run(int run_for_frames) {
         if(run_for_frames != 0 && current_frame >= run_for_frames) break;
         glfwPollEvents(); // Read all the user events and call relevant callbacks.
 
+        #ifdef _WIN32
         // Start a new ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
         if(currentState) currentState->onImmediateGui(); // Call to run any required Immediate GUI.
 
@@ -258,6 +276,7 @@ int our::Application::run(int run_for_frames) {
 
         // Render the ImGui commands we called (this doesn't actually draw to the screen yet.
         ImGui::Render();
+        #endif
 
         // Just in case ImGui changed the OpenGL viewport (the portion of the window to which we render the geometry),
         // we set it back to cover the whole window
@@ -276,7 +295,11 @@ int our::Application::run(int run_for_frames) {
         glDisable(GL_DEBUG_OUTPUT);
         glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 #endif
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // Render the ImGui to the framebuffer
+
+#ifdef _WIN32
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // Render the ImGui to the framebuffer
+#endif
+
 #if defined(ENABLE_OPENGL_DEBUG_MESSAGES)
         // Re-enable the debug messages
         glEnable(GL_DEBUG_OUTPUT);
@@ -329,10 +352,12 @@ int our::Application::run(int run_for_frames) {
     // Call for cleaning up
     if(currentState) currentState->onDestroy();
 
+#ifdef _WIN32
     // Shutdown ImGui & destroy the context
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+#endif
 
     // Destroy the window
     glfwDestroyWindow(window);
