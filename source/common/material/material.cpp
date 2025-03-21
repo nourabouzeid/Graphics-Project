@@ -12,14 +12,9 @@ namespace our
         // TODO: (Req 7) Write this function
 
         pipelineState.setup();
-
         // Use the shader program
-        if (shader)
-        {
-            shader->use();
-        }
 
-      
+        shader->use();
     }
 
     // This function read the material data from a json object
@@ -45,10 +40,8 @@ namespace our
         Material::setup();
 
         // Set the tint uniform
-        if (shader)
-        {
-            shader->set("tint", tint);
-        }
+
+        shader->set("tint", tint);
     }
 
     // This function read the material data from a json object
@@ -68,21 +61,17 @@ namespace our
         // TODO: (Req 7) Write this function
 
         TintedMaterial::setup();
-        if (shader)
-        {
-            shader->set("alphaThreshold", alphaThreshold);
-        }
+
+        shader->set("alphaThreshold", alphaThreshold);
 
         // Bind the texture and sampler to a texture unit
-        if (texture && sampler)
-        {
-            glActiveTexture(GL_TEXTURE0); // Activate texture unit 0
-            texture->bind();              // Bind the texture
-            sampler->bind(0);             // Bind the sampler to texture unit 0
 
-            // Send the texture unit index to the shader
-            shader->set("tex", 0);
-        }
+        glActiveTexture(GL_TEXTURE0); // Activate texture unit 0
+        texture->bind();              // Bind the texture
+        sampler->bind(0);             // Bind the sampler to texture unit 0
+
+        // Send the texture unit index to the shader
+        shader->set("tex", 0);
     }
 
     // This function read the material data from a json object
