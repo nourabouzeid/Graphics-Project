@@ -21,7 +21,7 @@ namespace our {
         PipelineState pipelineState;
         ShaderProgram* shader;
         bool transparent;
-        
+
         // This function does 2 things: setup the pipeline state and set the shader program to be used
         virtual void setup() const;
         // This function read a material from a json object
@@ -54,12 +54,14 @@ namespace our {
     };
 
     // This function returns a new material instance based on the given type
-    inline Material* createMaterialFromType(const std::string& type){
-        if(type == "tinted"){
+    inline Material* createMaterialFromType(const std::string& type) {
+        if (type == "tinted") {
             return new TintedMaterial();
-        } else if(type == "textured"){
+        }
+        else if (type == "textured") {
             return new TexturedMaterial();
-        } else {
+        }
+        else {
             return new Material();
         }
     }

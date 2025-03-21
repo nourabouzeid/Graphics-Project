@@ -29,37 +29,37 @@ namespace our {
             GLenum equation = GL_FUNC_ADD;
             GLenum sourceFactor = GL_SRC_ALPHA;
             GLenum destinationFactor = GL_ONE_MINUS_SRC_ALPHA;
-            glm::vec4 constantColor = {0, 0, 0, 0};
+            glm::vec4 constantColor = { 0, 0, 0, 0 };
         } blending;
 
         // These options specify the color and depth mask which can be used to
         // prevent the rendering/clearing from modifying certain channels of certain targets in the framebuffer
-        glm::bvec4 colorMask = {true, true, true, true}; // To know how to use it, check glColorMask
+        glm::bvec4 colorMask = { true, true, true, true }; // To know how to use it, check glColorMask
         bool depthMask = true; // To know how to use it, check glDepthMask
 
 
         // This function should set the OpenGL options to the values specified by this structure
         // For example, if faceCulling.enabled is true, you should call glEnable(GL_CULL_FACE), otherwise, you should call glDisable(GL_CULL_FACE)
         void setupFaceCulling() const {
-            if(faceCulling.enabled) {
+            if (faceCulling.enabled) {
                 glEnable(GL_CULL_FACE);
                 glCullFace(faceCulling.culledFace);
-                glFrontFace(faceCulling.frontFace); 
+                glFrontFace(faceCulling.frontFace);
             }
             else glDisable(GL_CULL_FACE);
         }
 
         void setupDepthTesting() const {
-            if(depthTesting.enabled) {
+            if (depthTesting.enabled) {
                 glEnable(GL_DEPTH_TEST);
-                glDepthFunc(depthTesting.function); 
+                glDepthFunc(depthTesting.function);
             }
             else glDisable(GL_DEPTH_TEST);
         }
 
         void setupBlending() const {
-            if(blending.enabled) {
-                glEnable(GL_BLEND); 
+            if (blending.enabled) {
+                glEnable(GL_BLEND);
                 glBlendFunc(blending.sourceFactor, blending.destinationFactor);
                 glBlendEquation(blending.equation);
                 glBlendColor(
@@ -77,7 +77,7 @@ namespace our {
             setupFaceCulling();
             setupDepthTesting();
             setupBlending();
-            glColorMask(colorMask[0],colorMask[1],colorMask[2],colorMask[3]);
+            glColorMask(colorMask[0], colorMask[1], colorMask[2], colorMask[3]);
             glDepthMask(depthMask);
         }
 

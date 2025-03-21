@@ -9,7 +9,7 @@ namespace our {
     class World {
         std::unordered_set<Entity*> entities; // These are the entities held by this world
         std::unordered_set<Entity*> markedForRemoval; // These are the entities that are awaiting to be deleted
-                                                      // when deleteMarkedEntities is called
+        // when deleteMarkedEntities is called
     public:
 
         World() = default;
@@ -26,8 +26,8 @@ namespace our {
         Entity* add() {
             //TODO: (Req 8) Create a new entity, set its world member variable to this,
             // and don't forget to insert it in the suitable container.
-            Entity* newEntity=new Entity();
-            newEntity->world=this;
+            Entity* newEntity = new Entity();
+            newEntity->world = this;
             entities.insert(newEntity);
             return newEntity;
         }
@@ -39,45 +39,45 @@ namespace our {
 
         // This marks an entity for removal by adding it to the "markedForRemoval" set.
         // The elements in the "markedForRemoval" set will be removed and deleted when "deleteMarkedEntities" is called.
-        void markForRemoval(Entity* entity){
+        void markForRemoval(Entity* entity) {
             //TODO: (Req 8) If the entity is in this world, add it to the "markedForRemoval" set.
-            if(entities.find(entity)!=entities.end())
+            if (entities.find(entity) != entities.end())
                 markedForRemoval.insert(entity);
         }
 
         // This removes the elements in "markedForRemoval" from the "entities" set.
         // Then each of these elements are deleted.
-        void deleteMarkedEntities(){
+        void deleteMarkedEntities() {
             //TODO: (Req 8) Remove and delete all the entities that have been marked for removal
-            for(auto it=markedForRemoval.begin();it!=markedForRemoval.end();) {
-                Entity* entity=*it;
+            for (auto it = markedForRemoval.begin();it != markedForRemoval.end();) {
+                Entity* entity = *it;
                 entities.erase(entity);
                 delete entity;
-                it=markedForRemoval.erase(it);
+                it = markedForRemoval.erase(it);
             }
 
         }
 
         //This deletes all entities in the world
-        void clear(){
+        void clear() {
             //TODO: (Req 8) Delete all the entites and make sure that the containers are empty
-            for(auto it=entities.begin();it!=entities.end();) {
-                Entity* entity=*it;
-                if(markedForRemoval.find(entity)!=markedForRemoval.end())
+            for (auto it = entities.begin();it != entities.end();) {
+                Entity* entity = *it;
+                if (markedForRemoval.find(entity) != markedForRemoval.end())
                     markedForRemoval.erase(entity);
                 delete entity;
-                it=markedForRemoval.erase(it);
+                it = markedForRemoval.erase(it);
             }
         }
 
         //Since the world owns all of its entities, they should be deleted alongside it.
-        ~World(){
+        ~World() {
             clear();
         }
 
         // The world should not be copyable
         World(const World&) = delete;
-        World &operator=(World const &) = delete;
+        World& operator=(World const&) = delete;
     };
 
 }

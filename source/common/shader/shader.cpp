@@ -9,7 +9,7 @@
 std::string checkForShaderCompilationErrors(GLuint shader);
 std::string checkForLinkingErrors(GLuint program);
 
-bool our::ShaderProgram::attach(const std::string &filename, GLenum type) const
+bool our::ShaderProgram::attach(const std::string& filename, GLenum type) const
 {
     // Here, we open the file and read a string from it containing the GLSL code of our shader
     std::ifstream file(filename);
@@ -19,7 +19,7 @@ bool our::ShaderProgram::attach(const std::string &filename, GLenum type) const
         return false;
     }
     std::string sourceString = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
-    const char *sourceCStr = sourceString.c_str();
+    const char* sourceCStr = sourceString.c_str();
     file.close();
 
     // TODO: Complete this function
@@ -78,7 +78,7 @@ std::string checkForShaderCompilationErrors(GLuint shader)
     {
         GLint length;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
-        char *logStr = new char[length];
+        char* logStr = new char[length];
         glGetShaderInfoLog(shader, length, nullptr, logStr);
         std::string errorLog(logStr);
         delete[] logStr;
@@ -96,7 +96,7 @@ std::string checkForLinkingErrors(GLuint program)
     {
         GLint length;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-        char *logStr = new char[length];
+        char* logStr = new char[length];
         glGetProgramInfoLog(program, length, nullptr, logStr);
         std::string error(logStr);
         delete[] logStr;

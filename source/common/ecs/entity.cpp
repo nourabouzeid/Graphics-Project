@@ -12,23 +12,23 @@ namespace our {
     // its parent's parent's matrix and so on till you reach the root.
     glm::mat4 Entity::getLocalToWorldMatrix() const {
         //TODO: (Req 8) Write this function
-        glm::mat4 worldMatrix=glm::mat4(1.0f);
-        const Entity* entity= this;
-        while(entity) {
-            worldMatrix=entity->localTransform.toMat4() * worldMatrix;
-            entity=entity->parent;
-        } 
+        glm::mat4 worldMatrix = glm::mat4(1.0f);
+        const Entity* entity = this;
+        while (entity) {
+            worldMatrix = entity->localTransform.toMat4() * worldMatrix;
+            entity = entity->parent;
+        }
         return worldMatrix;
     }
 
     // Deserializes the entity data and components from a json object
-    void Entity::deserialize(const nlohmann::json& data){
-        if(!data.is_object()) return;
+    void Entity::deserialize(const nlohmann::json& data) {
+        if (!data.is_object()) return;
         name = data.value("name", name);
         localTransform.deserialize(data);
-        if(data.contains("components")){
-            if(const auto& components = data["components"]; components.is_array()){
-                for(auto& component: components){
+        if (data.contains("components")) {
+            if (const auto& components = data["components"]; components.is_array()) {
+                for (auto& component : components) {
                     deserializeComponent(component, this);
                 }
             }
