@@ -5,7 +5,7 @@
 namespace our
 {
 
-    void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json &config)
+    void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json& config)
     {
         // First, we store the window size for later use
         this->windowSize = windowSize;
@@ -17,7 +17,7 @@ namespace our
             this->skySphere = mesh_utils::sphere(glm::ivec2(16, 16));
 
             // We can draw the sky using the same shader used to draw textured objects
-            ShaderProgram *skyShader = new ShaderProgram();
+            ShaderProgram* skyShader = new ShaderProgram();
             skyShader->attach("assets/shaders/textured.vert", GL_VERTEX_SHADER);
             skyShader->attach("assets/shaders/textured.frag", GL_FRAGMENT_SHADER);
             skyShader->link();
@@ -35,10 +35,10 @@ namespace our
 
             // Load the sky texture (note that we don't need mipmaps since we want to avoid any unnecessary blurring while rendering the sky)
             std::string skyTextureFile = config.value<std::string>("sky", "");
-            Texture2D *skyTexture = texture_utils::loadImage(skyTextureFile, false);
+            Texture2D* skyTexture = texture_utils::loadImage(skyTextureFile, false);
 
             // Setup a sampler for the sky
-            Sampler *skySampler = new Sampler();
+            Sampler* skySampler = new Sampler();
             skySampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             skySampler->set(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             skySampler->set(GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -67,9 +67,9 @@ namespace our
             //  Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
             //  The depth format can be (Depth component with 24 bits).
 
-            colorTarget = texture_utils::empty(GL_RGBA8, windowSize);
+            colorTarget = texture_utils::empty(GL_RGBA8, GL_RGBA, windowSize);
             glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTarget->getOpenGLName(), 0);
-            depthTarget = texture_utils::empty(GL_DEPTH_COMPONENT24, windowSize);
+            depthTarget = texture_utils::empty(GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, windowSize);
             glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTarget->getOpenGLName(), 0);
             // TODO: (Req 11) Unbind the framebuffer just to be safe
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -77,14 +77,14 @@ namespace our
             glGenVertexArrays(1, &postProcessVertexArray);
 
             // Create a sampler to use for sampling the scene texture in the post processing shader
-            Sampler *postprocessSampler = new Sampler();
+            Sampler* postprocessSampler = new Sampler();
             postprocessSampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             postprocessSampler->set(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             postprocessSampler->set(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             postprocessSampler->set(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
             // Create the post processing shader
-            ShaderProgram *postprocessShader = new ShaderProgram();
+            ShaderProgram* postprocessShader = new ShaderProgram();
             postprocessShader->attach("assets/shaders/fullscreen.vert", GL_VERTEX_SHADER);
             postprocessShader->attach(config.value<std::string>("postprocess", ""), GL_FRAGMENT_SHADER);
             postprocessShader->link();
@@ -124,10 +124,10 @@ namespace our
         }
     }
 
-    void ForwardRenderer::render(World *world)
+    void ForwardRenderer::render(World* world)
     {
         // First of all, we search for a camera and for all the mesh renderers
-        CameraComponent *camera = nullptr;
+        CameraComponent* camera = nullptr;
         opaqueCommands.clear();
         transparentCommands.clear();
         for (auto entity : world->getEntities())
@@ -165,17 +165,17 @@ namespace our
         //  HINT: See how you wrote the CameraComponent::getViewMatrix, it should help you solve this one
 
         glm::vec3 cameraForward = camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(0.0, 0.0, -1.0f, 0.0f);
-        std::sort(transparentCommands.begin(), transparentCommands.end(), [cameraForward](const RenderCommand &first, const RenderCommand &second)
-                  {
-                      // TODO: (Req 9) Finish this function
-                      // HINT: the following return should return true "first" should be drawn before "second".
-                      return (glm::dot(cameraForward, first.center) > glm::dot(cameraForward, second.center)); });
+        std::sort(transparentCommands.begin(), transparentCommands.end(), [cameraForward](const RenderCommand& first, const RenderCommand& second)
+            {
+                // TODO: (Req 9) Finish this function
+                // HINT: the following return should return true "first" should be drawn before "second".
+                return (glm::dot(cameraForward, first.center) > glm::dot(cameraForward, second.center)); });
 
         // TODO: (Req 9) Get the camera ViewProjection matrix and store it in VP
 
         glm::mat4 VP = camera->getProjectionMatrix(
-                           windowSize) *
-                       camera->getViewMatrix();
+            windowSize) *
+            camera->getViewMatrix();
 
         // TODO: (Req 9) Set the OpenGL viewport using viewportStart and viewportSize
         glViewport(0, 0, windowSize.x, windowSize.y);
@@ -201,7 +201,7 @@ namespace our
         // TODO: (Req 9) Draw all the opaque commands
 
         //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-        for (auto &command : opaqueCommands)
+        for (auto& command : opaqueCommands)
         {
             command.material->setup();
             // Model matrix is the transformation matrix from local space to world space.
@@ -241,7 +241,7 @@ namespace our
         }
         // TODO: (Req 9) Draw all the transparent commands
         //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-        for (auto &command : transparentCommands)
+        for (auto& command : transparentCommands)
         {
             command.material->setup();
             glm::mat4 transform = VP * command.localToWorld;
