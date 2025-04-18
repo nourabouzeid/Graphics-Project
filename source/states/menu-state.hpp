@@ -60,6 +60,10 @@ class Menustate: public our::State {
         // Initially, the menu material will be black, then it will fade in
         menuMaterial->tint = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
+        menuMaterial->sampler = new our::Sampler();
+        menuMaterial->sampler->set(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        menuMaterial->sampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
         // Second, we create a material to highlight the hovered buttons
         highlightMaterial = new our::TintedMaterial();
         // Since the highlight is not textured, we used the tinted material shaders
