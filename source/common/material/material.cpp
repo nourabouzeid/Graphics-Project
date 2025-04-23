@@ -18,7 +18,7 @@ namespace our
     }
 
     // This function read the material data from a json object
-    void Material::deserialize(const nlohmann::json &data)
+    void Material::deserialize(const nlohmann::json& data)
     {
         if (!data.is_object())
             return;
@@ -45,7 +45,7 @@ namespace our
     }
 
     // This function read the material data from a json object
-    void TintedMaterial::deserialize(const nlohmann::json &data)
+    void TintedMaterial::deserialize(const nlohmann::json& data)
     {
         Material::deserialize(data);
         if (!data.is_object())
@@ -75,13 +75,78 @@ namespace our
     }
 
     // This function read the material data from a json object
-    void TexturedMaterial::deserialize(const nlohmann::json &data)
+    void TexturedMaterial::deserialize(const nlohmann::json& data)
     {
         TintedMaterial::deserialize(data);
         if (!data.is_object())
             return;
         alphaThreshold = data.value("alphaThreshold", 0.0f);
         texture = AssetLoader<Texture2D>::get(data.value("texture", ""));
+        sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
+    }
+    void LitMaterial::setup() const {
+        // Call the base Material setup first
+        Material::setup();
+
+        shader->set("alphaThreshold", alphaThreshold);
+
+        // Bind textures and samplers to texture units
+        int textureUnit = 0;
+
+        if (albedo) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            albedo->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.albedo", textureUnit++);
+        }
+
+        if (specular) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            specular->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.specular", textureUnit++);
+        }
+
+        if (roughness) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            roughness->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.roughness", textureUnit++);
+        }
+
+        if (ambient) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            ambient->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.ambient", textureUnit++);
+        }
+
+        if (emissive) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            emissive->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.emissive", textureUnit);
+        }
+    }
+
+    void LitMaterial::deserialize(const nlohmann::json& data) {
+        // Call the base Material deserialize first
+        Material::deserialize(data);
+
+        if (!data.is_object())
+            return;
+
+        // Load alpha threshold
+        alphaThreshold = data.value("alphaThreshold", 0.0f);
+
+        // Load textures
+        albedo = AssetLoader<Texture2D>::get(data.value("albedo", ""));
+        specular = AssetLoader<Texture2D>::get(data.value("specular", ""));
+        roughness = AssetLoader<Texture2D>::get(data.value("roughness", ""));
+        ambient = AssetLoader<Texture2D>::get(data.value("ambient", ""));
+        emissive = AssetLoader<Texture2D>::get(data.value("emissive", ""));
+
+        // Load sampler (shared for all textures)
         sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
     }
 
