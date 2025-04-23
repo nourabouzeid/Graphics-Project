@@ -10,10 +10,6 @@ our::Texture2D* our::texture_utils::empty(GLenum format1, GLenum format2, glm::i
     //TODO: (Req 11) Finish this function to create an empty texture with the given size and format
     texture->bind();
     glTexImage2D(GL_TEXTURE_2D, 0, format1, size.x, size.y, 0, format2, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     texture->unbind();
     return texture;
 }
