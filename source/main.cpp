@@ -44,15 +44,6 @@ int main(int argc, char** argv) {
     // Register all the states of the project in the application
     app.registerState<Menustate>("menu");
     app.registerState<Playstate>("play");
-    app.registerState<ShaderTestState>("shader-test");
-    app.registerState<MeshTestState>("mesh-test");
-    app.registerState<TransformTestState>("transform-test");
-    app.registerState<PipelineTestState>("pipeline-test");
-    app.registerState<TextureTestState>("texture-test");
-    app.registerState<SamplerTestState>("sampler-test");
-    app.registerState<MaterialTestState>("material-test");
-    app.registerState<EntityTestState>("entity-test");
-    app.registerState<RendererTestState>("renderer-test");
     // Then choose the state to run based on the option "start-scene" in the config
     if(app_config.contains(std::string{"start-scene"})){
         app.changeState(app_config["start-scene"].get<std::string>());

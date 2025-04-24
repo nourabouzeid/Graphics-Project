@@ -14,8 +14,8 @@ namespace our {
         else {
             cameraType = CameraType::PERSPECTIVE;
         }
-        near = data.value("near", 0.01f);
-        far = data.value("far", 100.0f);
+        nearC = data.value("near", 0.01f);
+        farC = data.value("far", 100.0f);
         fovY = data.value("fovY", 90.0f) * (glm::pi<float>() / 180);
         orthoHeight = data.value("orthoHeight", 1.0f);
     }
@@ -68,16 +68,16 @@ namespace our {
                 orthoWidth / 2.0f,
                 -orthoHeight / 2.0f,
                 orthoHeight / 2.0f,
-                near,
-                far
+                nearC,
+                farC
             );
         }
         else {
             return glm::perspective(
                 fovY,
                 aspectRatio,
-                near,
-                far
+                nearC,
+                farC
             );
         }
     }

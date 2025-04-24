@@ -17,7 +17,7 @@ namespace our {
     class CameraComponent : public Component {
     public:
         CameraType cameraType; // The type of the camera
-        float near, far; // The distance from the camera center to the near and far plane
+        float nearC, farC; // The distance from the camera center to the near and far plane
         float fovY; // The field of view angle of the camera if it is a perspective camera
         float orthoHeight; // The orthographic height of the camera if it is an orthographic camera
 

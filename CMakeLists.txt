@@ -90,6 +90,9 @@ set(COMMON_SOURCES
         source/common/systems/forward-renderer.cpp
         source/common/systems/free-camera-controller.hpp
         source/common/systems/movement.hpp
+      
+        source/common/systems/sound.hpp
+        source/common/systems/sound.cpp
 )
 
 # Define the directories in which to search for the included headers
@@ -100,6 +103,7 @@ include_directories(
         vendor/glm
         vendor/imgui
         vendor/utils
+        vendor/bass
 )
 
 
@@ -126,3 +130,5 @@ set(STATES_SOURCES
 # Then we link GLFW with each target
 add_executable(GAME_APPLICATION source/main.cpp ${STATES_SOURCES} ${COMMON_SOURCES} ${VENDOR_SOURCES})
 target_link_libraries(GAME_APPLICATION glfw)
+target_link_directories(GAME_APPLICATION PUBLIC vendor/bass/x64)
+target_link_libraries(GAME_APPLICATION glfw bass)
