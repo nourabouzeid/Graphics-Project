@@ -33,7 +33,7 @@
         sampler2D roughness_map;
         vec2 roughness_range;
         sampler2D emissive_map;
-        vec3 emissive_tint
+        vec3 emissive_tint;
     };
 
     // This function samples the texture maps from the textured material and calculates the equivalent material at the given texture coordinates.

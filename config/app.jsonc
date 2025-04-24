@@ -23,6 +23,10 @@
                 "textured":{
                     "vs":"assets/shaders/textured.vert",
                     "fs":"assets/shaders/textured.frag"
+                },
+                "lit":{
+                    "vs":"assets/shaders/light/light.vert",
+                    "fs":"assets/shaders/light/light.frag"
                 }
             },
             "textures":{
@@ -30,7 +34,9 @@
                 "grass": "assets/textures/grass_ground_d.jpg",
                 "wood": "assets/textures/wood.jpg",
                 "glass": "assets/textures/glass-panels.png",
-                "monkey": "assets/textures/monkey.png"
+                "monkey": "assets/textures/monkey.png",
+                "wood_albedo":"assets/textures/WoodFloor064_1K-PNG_Color.png",
+                "wood_roughness":"assets/textures/WoodFloor064_1K-PNG_Roughness.png"
             },
             "meshes":{
                 "cube": "assets/models/cube.obj",
@@ -96,8 +102,8 @@
                     "sampler": "default"
                 },
                 "monkey":{
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lit",
+                    "shader": "lit",
                     "pipelineState": {
                         "faceCulling":{
                             "enabled": false
@@ -106,8 +112,8 @@
                             "enabled": true
                         }
                     },
-                    "tint": [1, 1, 1, 1],
-                    "texture": "monkey",
+                    "albedoMap": "wood_albedo",
+                    "roughnessMap": "wood_roghness",
                     "sampler": "default"
                 },
                 "moon":{
@@ -253,6 +259,11 @@
                     {
                         "type": "Movement",
                         "angularVelocity": [0, 90, 0]
+                    },
+                    {
+                        "type": "Light",
+                        "lightType": "point",
+                        "color": [1,1,1]
                     }
                 ]
             }

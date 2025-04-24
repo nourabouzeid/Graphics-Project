@@ -24,8 +24,8 @@ namespace our {
         float attenuationQuadratic;    // The quadratic of the attenuation
 
 
-        // The ID of this component type is "Light Component"
-        static std::string getID() { return "Light Component"; }
+        // The ID of this component type is "Light"
+        static std::string getID() { return "Light"; }
 
         // Receives the mesh & material from the AssetLoader by the names given in the json object
         void deserialize(const nlohmann::json& data) override;

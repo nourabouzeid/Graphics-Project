@@ -1,6 +1,7 @@
 #include "forward-renderer.hpp"
 #include "../mesh/mesh-utils.hpp"
 #include "../texture/texture-utils.hpp"
+#include<iostream>
 
 namespace our
 {
@@ -126,6 +127,7 @@ namespace our
 
     void ForwardRenderer::render(World* world)
     {
+        std::vector<light_utils::LightCommand> lightCommands;
         // First of all, we search for a camera and for all the mesh renderers
         CameraComponent* camera = nullptr;
         opaqueCommands.clear();
@@ -268,6 +270,8 @@ namespace our
             command.material->shader->set("local_to_world_inv_transpose", glm::transpose(glm::inverse(command.localToWorld)));
             command.material->shader->set("view_projection", VP);
             command.material->shader->set("camera_position", cameraPos);
+            light_utils::setLights(command.material->shader, lightCommands);
+            command.material->shader->set("light_count", int(lightCommands.size()));
             command.mesh->draw();
         }
         // If there is a postprocess material, apply postprocessing
