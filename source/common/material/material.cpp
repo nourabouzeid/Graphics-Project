@@ -88,44 +88,48 @@ namespace our
         // Call the base Material setup first
         Material::setup();
 
+        shader->set("albedo_tint", albedoTint);
+        shader->set("specular_tint", specularTint);
+        shader->set("emissive_tint", emissiveTint);
+        shader->set("roughness_range", roughnessRange);
         shader->set("alphaThreshold", alphaThreshold);
 
         // Bind textures and samplers to texture units
         int textureUnit = 0;
 
-        if (albedo) {
+        if (albedoMap) {
             glActiveTexture(GL_TEXTURE0 + textureUnit);
-            albedo->bind();
+            albedoMap->bind();
             sampler->bind(textureUnit);
-            shader->set("material.albedo", textureUnit++);
+            shader->set("material.albedo_map", textureUnit++);
         }
 
-        if (specular) {
+        if (specularMap) {
             glActiveTexture(GL_TEXTURE0 + textureUnit);
-            specular->bind();
+            specularMap->bind();
             sampler->bind(textureUnit);
-            shader->set("material.specular", textureUnit++);
+            shader->set("material.specular_map", textureUnit++);
         }
 
-        if (roughness) {
+        if (roughnessMap) {
             glActiveTexture(GL_TEXTURE0 + textureUnit);
-            roughness->bind();
+            roughnessMap->bind();
             sampler->bind(textureUnit);
-            shader->set("material.roughness", textureUnit++);
+            shader->set("material.roughness_map", textureUnit++);
         }
 
-        if (ambient) {
+        if (ambientMap) {
             glActiveTexture(GL_TEXTURE0 + textureUnit);
-            ambient->bind();
+            ambientMap->bind();
             sampler->bind(textureUnit);
-            shader->set("material.ambient", textureUnit++);
+            shader->set("material.ambient_occlusion_map", textureUnit++);
         }
 
-        if (emissive) {
+        if (emissiveMap) {
             glActiveTexture(GL_TEXTURE0 + textureUnit);
-            emissive->bind();
+            emissiveMap->bind();
             sampler->bind(textureUnit);
-            shader->set("material.emissive", textureUnit);
+            shader->set("material.emissive_map", textureUnit);
         }
     }
 
@@ -138,13 +142,18 @@ namespace our
 
         // Load alpha threshold
         alphaThreshold = data.value("alphaThreshold", 0.0f);
+        albedoTint = data.value("albedoTint", glm::vec3(1.0f));
+        specularTint = data.value("specularTint", glm::vec3(1.0f));
+        emissiveTint = data.value("emissiveTint", glm::vec3(1.0f));
+        roughnessRange = data.value("roughnessRange", glm::vec2(0.0f, 1.0f));
+
 
         // Load textures
-        albedo = AssetLoader<Texture2D>::get(data.value("albedo", ""));
-        specular = AssetLoader<Texture2D>::get(data.value("specular", ""));
-        roughness = AssetLoader<Texture2D>::get(data.value("roughness", ""));
-        ambient = AssetLoader<Texture2D>::get(data.value("ambient", ""));
-        emissive = AssetLoader<Texture2D>::get(data.value("emissive", ""));
+        albedoMap = AssetLoader<Texture2D>::get(data.value("albedoMap", ""));
+        specularMap = AssetLoader<Texture2D>::get(data.value("specularMap", ""));
+        roughnessMap = AssetLoader<Texture2D>::get(data.value("roughnessMap", ""));
+        ambientMap = AssetLoader<Texture2D>::get(data.value("ambientMap", ""));
+        emissiveMap = AssetLoader<Texture2D>::get(data.value("emissiveMap", ""));
 
         // Load sampler (shared for all textures)
         sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));

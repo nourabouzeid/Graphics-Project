@@ -29,7 +29,7 @@ namespace our {
 
         // Creates and returns the camera view matrix
         glm::mat4 getViewMatrix() const;
-        
+
         // Creates and returns the camera projection matrix
         // "viewportSize" is used to compute the aspect ratio
         glm::mat4 getProjectionMatrix(glm::ivec2 viewportSize) const;

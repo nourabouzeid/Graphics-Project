@@ -16,8 +16,8 @@ namespace our {
     public:
         LightType type;
         glm::vec3 color;
-        float inner_angle;              // spot inner angle in radians
-        float outer_angle;              // spot outer angle in radians
+        float innerAngle;              // spot inner angle in radians
+        float outerAngle;              // spot outer angle in radians
 
         float attenuationConstant;     // The constant of the attenuation
         float attenuationLinear;       // The linear of the attenuation

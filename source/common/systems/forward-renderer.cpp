@@ -136,11 +136,12 @@ namespace our
             if (!camera)
                 camera = entity->getComponent<CameraComponent>();
             // If this entity has a mesh renderer component
+            glm::mat4 localToWorldMatrix = entity->getLocalToWorldMatrix();
             if (auto meshRenderer = entity->getComponent<MeshRendererComponent>(); meshRenderer)
             {
                 // We construct a command from it
                 RenderCommand command;
-                command.localToWorld = meshRenderer->getOwner()->getLocalToWorldMatrix();
+                command.localToWorld = localToWorldMatrix;
                 command.center = glm::vec3(command.localToWorld * glm::vec4(0, 0, 0, 1));
                 command.mesh = meshRenderer->mesh;
                 command.material = meshRenderer->material;
@@ -154,6 +155,13 @@ namespace our
                     // Otherwise, we add it to the opaque command list
                     opaqueCommands.push_back(command);
                 }
+            }
+            if (auto light = entity->getComponent<LightComponent>(); light) {
+                light_utils::LightCommand lightCommand;
+                lightCommand.position = glm::vec3(localToWorldMatrix[3]);
+                lightCommand.direction = -glm::normalize(glm::vec3(localToWorldMatrix[2]));
+                lightCommand.lightComponent = light;
+                lightCommands.push_back(lightCommand);
             }
         }
 
@@ -176,6 +184,7 @@ namespace our
         glm::mat4 VP = camera->getProjectionMatrix(
             windowSize) *
             camera->getViewMatrix();
+        glm::vec3 cameraPos = camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(0, 0, 0, 1);
 
         // TODO: (Req 9) Set the OpenGL viewport using viewportStart and viewportSize
         glViewport(0, 0, windowSize.x, windowSize.y);
@@ -208,6 +217,13 @@ namespace our
             // To obtain MVP we need to multiply the model matrix from the left (from the right in code)
             glm::mat4 transform = VP * command.localToWorld;
             command.material->shader->set("transform", transform);
+            command.material->shader->set("local_to_world", command.localToWorld);
+            command.material->shader->set("local_to_world_inv_transpose", glm::transpose(glm::inverse(command.localToWorld)));
+            command.material->shader->set("view_projection", VP);
+            command.material->shader->set("camera_position", cameraPos);
+            light_utils::setLights(command.material->shader, lightCommands);
+            command.material->shader->set("light_count", int(lightCommands.size()));
+
             command.mesh->draw();
         }
         // If there is a sky material, draw the sky
@@ -244,8 +260,14 @@ namespace our
         for (auto& command : transparentCommands)
         {
             command.material->setup();
+            // Model matrix is the transformation matrix from local space to world space.
+            // To obtain MVP we need to multiply the model matrix from the left (from the right in code)
             glm::mat4 transform = VP * command.localToWorld;
             command.material->shader->set("transform", transform);
+            command.material->shader->set("local_to_world", command.localToWorld);
+            command.material->shader->set("local_to_world_inv_transpose", glm::transpose(glm::inverse(command.localToWorld)));
+            command.material->shader->set("view_projection", VP);
+            command.material->shader->set("camera_position", cameraPos);
             command.mesh->draw();
         }
         // If there is a postprocess material, apply postprocessing

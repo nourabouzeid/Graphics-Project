@@ -1,4 +1,4 @@
-#include "light-component.hpp"
+#include "light.hpp"
 #include "../asset-loader.hpp"
 #include <deserialize-utils.hpp>
 
@@ -16,8 +16,8 @@ namespace our {
         else type = LightType::DIRECTIONAL;
 
         color = data.value("color", glm::vec3(0));
-        inner_angle = data.value("inner_angle", 0.0f);
-        outer_angle = data.value("outer_angle", 0.0f);
+        innerAngle = data.value("innerAngle", 0.0f);
+        outerAngle = data.value("outerAngle", 0.0f);
         attenuationConstant = data.value("attenuationConstant", 1.0f);
         attenuationLinear = data.value("attenuationLinear", 0.007f);
         attenuationQuadratic = data.value("attenuationQuadratic", 0.0014f);

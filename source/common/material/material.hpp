@@ -54,8 +54,10 @@ namespace our {
     };
     class LitMaterial : public Material {
     public:
-        Texture2D* albedo, * specular, * roughness, * ambient, * emissive;
+        Texture2D* albedoMap, * specularMap, * roughnessMap, * ambientMap, * emissiveMap;
         Sampler* sampler;
+        glm::vec3 albedoTint, emissiveTint, specularTint;
+        glm::vec2 roughnessRange;
         float alphaThreshold;
 
         void setup() const override;
