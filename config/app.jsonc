@@ -32,11 +32,15 @@
             "textures":{
                 "moon": "assets/textures/moon.jpg",
                 "grass": "assets/textures/grass_ground_d.jpg",
-                "wood": "assets/textures/wood.jpg",
+                "wood": "assets/textures/wood/albedo.jpg",
                 "glass": "assets/textures/glass-panels.png",
                 "monkey": "assets/textures/monkey.png",
-                "wood_albedo":"assets/textures/WoodFloor064_1K-PNG_Color.png",
-                "wood_roughness":"assets/textures/WoodFloor064_1K-PNG_Roughness.png"
+                "monkey_ambient":"assets/textures/suzanne/ambient_occlusion.jpg",
+                "wood_albedo":"assets/textures/wood/albedo.jpg",
+                "wood_roughness":"assets/textures/wood/roughness.jpg",
+                "metal_specular":"assets/textures/metal/specular.jpg",
+                "metal_roughness":"assets/textures/metal/roughness.jpg",
+                "metal_albedo":"assets/textures/metal/albedo.jpg"
             },
             "meshes":{
                 "cube": "assets/models/cube.obj",
@@ -112,8 +116,10 @@
                             "enabled": true
                         }
                     },
-                    "albedoMap": "wood_albedo",
-                    "roughnessMap": "wood_roghness",
+                    "albedoMap": "metal_albedo",
+                    "specularMap": "metal_specular",
+                    "roughnessMap": "metal_roughness",
+                    "ambientMap": "monkey_ambient",
                     "sampler": "default"
                 },
                 "moon":{

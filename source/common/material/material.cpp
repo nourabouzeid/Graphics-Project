@@ -140,7 +140,7 @@ namespace our
 
         // Load alpha threshold
         alphaThreshold = data.value("alphaThreshold", 0.0f);
-        albedoTint = data.value("albedoTint", glm::vec3(0.5f));
+        albedoTint = data.value("albedoTint", glm::vec3(0.3f));
         specularTint = data.value("specularTint", glm::vec3(1.0f));
         emissiveTint = data.value("emissiveTint", glm::vec3(1.0f));
         roughnessRange = data.value("roughnessRange", glm::vec2(0.0f, 1.0f));
