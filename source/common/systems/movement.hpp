@@ -11,27 +11,53 @@
 namespace our
 {
 
-    // The movement system is responsible for moving every entity which contains a MovementComponent.
-    // This system is added as a simple example for how use the ECS framework to implement logic. 
-    // For more information, see "common/components/movement.hpp"
-    class MovementSystem {
+    class MovementSystem
+    {
     public:
-
-        // This should be called every frame to update all entities containing a MovementComponent. 
-        void update(World* world, float deltaTime) {
+        void update(World *world, float deltaTime)
+        {
             // For each entity in the world
-            for(auto entity : world->getEntities()){
-                // Get the movement component if it exists
-                MovementComponent* movement = entity->getComponent<MovementComponent>();
-                // If the movement component exists
-                if(movement){
-                    // Change the position and rotation based on the linear & angular velocity and delta time.
-                    entity->localTransform.position += deltaTime * movement->linearVelocity;
+            for (auto entity : world->getEntities())
+            {
+                // Get the MovementComponent if it exists
+                MovementComponent *movement = entity->getComponent<MovementComponent>();
+
+                // If the MovementComponent exists
+                if (movement)
+                {
+                    // Calculate the final displacement for each axis
+                    glm::vec3 displacement = deltaTime * movement->linearVelocity;
+                    glm::vec3 newPosition = entity->localTransform.position + displacement;
+
+                    // Check boundaries for the X-axis
+                    if (newPosition.x > movement->maxBoundaries.x || newPosition.x < movement->minBoundaries.x)
+                    {
+                        movement->linearVelocity.x = -movement->linearVelocity.x; // Reverse X direction
+                        newPosition.x = glm::clamp(newPosition.x, movement->minBoundaries.x, movement->maxBoundaries.x);
+                    }
+
+                    // Check boundaries for the Y-axis
+                    if (newPosition.y > movement->maxBoundaries.y || newPosition.y < movement->minBoundaries.y)
+                    {
+                        movement->linearVelocity.y = -movement->linearVelocity.y; // Reverse Y direction
+                        newPosition.y = glm::clamp(newPosition.y, movement->minBoundaries.y, movement->maxBoundaries.y);
+                    }
+
+                    // Check boundaries for the Z-axis
+                    if (newPosition.z > movement->maxBoundaries.z || newPosition.z < movement->minBoundaries.z)
+                    {
+                        movement->linearVelocity.z = -movement->linearVelocity.z; // Reverse Z direction
+                        newPosition.z = glm::clamp(newPosition.z, movement->minBoundaries.z, movement->maxBoundaries.z);
+                    }
+
+                    // Update the position
+                    entity->localTransform.position = newPosition;
+
+                    // Update the rotation based on angular velocity and delta time
                     entity->localTransform.rotation += deltaTime * movement->angularVelocity;
                 }
             }
         }
-
     };
 
 }

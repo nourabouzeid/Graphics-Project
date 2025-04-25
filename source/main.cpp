@@ -17,12 +17,13 @@
 #include "states/entity-test-state.hpp"
 #include "states/renderer-test-state.hpp"
 
-int main(int argc, char** argv) {
-    
+int main(int argc, char **argv)
+{
+
     flags::args args(argc, argv); // Parse the command line arguments
     // config_path is the path to the json file containing the application configuration
     // Default: "config/app.json"
-    std::string config_path = args.get<std::string>("c", "config/app.jsonc");
+    std::string config_path = args.get<std::string>("c", "config/generated_game.jsonc");
     // run_for_frames is how many frames to run the application before automatically closing
     // This is useful for testing multiple configurations in a batch
     // Default: 0 where the application runs indefinitely until manually closed
@@ -30,7 +31,8 @@ int main(int argc, char** argv) {
 
     // Open the config file and exit if failed
     std::ifstream file_in(config_path);
-    if(!file_in){
+    if (!file_in)
+    {
         std::cerr << "Couldn't open file: " << config_path << std::endl;
         return -1;
     }
@@ -40,12 +42,23 @@ int main(int argc, char** argv) {
 
     // Create the application
     our::Application app(app_config);
-    
+
     // Register all the states of the project in the application
     app.registerState<Menustate>("menu");
     app.registerState<Playstate>("play");
+    app.registerState<ShaderTestState>("shader-test");
+    app.registerState<MeshTestState>("mesh-test");
+    app.registerState<TransformTestState>("transform-test");
+    app.registerState<PipelineTestState>("pipeline-test");
+    app.registerState<TextureTestState>("texture-test");
+    app.registerState<SamplerTestState>("sampler-test");
+    app.registerState<MaterialTestState>("material-test");
+    app.registerState<EntityTestState>("entity-test");
+    app.registerState<RendererTestState>("renderer-test");
+
     // Then choose the state to run based on the option "start-scene" in the config
-    if(app_config.contains(std::string{"start-scene"})){
+    if (app_config.contains(std::string{"start-scene"}))
+    {
         app.changeState(app_config["start-scene"].get<std::string>());
     }
 

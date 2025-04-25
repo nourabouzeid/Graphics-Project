@@ -1,7 +1,7 @@
 {
     "start-scene": "play",
     "window": {
-        "title": "Psuh Box Game",
+        "title": "Push Box Game",
         "size": {
             "width": 1280,
             "height": 720
@@ -150,13 +150,13 @@
         "world": [
             {
                 "position": [
-                    0,
-                    10,
-                    15
+                    -10,
+                    15,
+                    0
                 ],
                 "rotation": [
-                    0,
-                    45,
+                    -20,
+                    -90,
                     0
                 ],
                 "scale": [
@@ -175,9 +175,9 @@
             },
             {
                 "position": [
-                    2.2,
-                    0,
-                    0
+                    1,
+                    1,
+                    20
                 ],
                 "rotation": [
                     0,
@@ -199,9 +199,9 @@
             },
             {
                 "position": [
-                    2.2,
+                    14.0,
                     0,
-                    0
+                    14.0
                 ],
                 "rotation": [
                     180,
@@ -218,9 +218,9 @@
             },
             {
                 "position": [
-                    5,
+                    11,
                     5.5,
-                    -0.5
+                    11
                 ],
                 "rotation": [
                     0,
@@ -237,9 +237,286 @@
             },
             {
                 "position": [
-                    2.2,
+                    7.8,
+                    1,
+                    9.9
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    3,
+                    3,
+                    3
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    16.7,
+                    1,
+                    9.2
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    3,
+                    3,
+                    3
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    8.9,
+                    1,
+                    16.4
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    3,
+                    3,
+                    3
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    14.0,
+                    0,
+                    32.0
+                ],
+                "rotation": [
+                    180,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "groundEarth",
+                        "material": "groundEarth"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    11,
+                    5.5,
+                    29
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "box",
+                        "material": "box"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    9.3,
+                    1,
+                    32.9
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    3,
+                    3,
+                    3
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    14.0,
+                    0,
+                    46.0
+                ],
+                "rotation": [
+                    180,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "groundEarth",
+                        "material": "groundEarth"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    11,
+                    5.5,
+                    43
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "box",
+                        "material": "box"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    14.0,
+                    1,
+                    41.5
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    3,
+                    3,
+                    3
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    32.0,
+                    0,
+                    46.0
+                ],
+                "rotation": [
+                    180,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "groundEarth",
+                        "material": "groundEarth"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    29,
+                    5.5,
+                    43
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "box",
+                        "material": "box"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    25.8,
+                    1,
+                    49.9
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    3,
+                    3,
+                    3
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    46.0,
+                    0,
+                    46.0
+                ],
+                "rotation": [
+                    180,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "groundEarth",
+                        "material": "groundEarth"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    38,
                     3.5,
-                    -0.5
+                    38
                 ],
                 "rotation": [
                     0,
@@ -269,9 +546,9 @@
             },
             {
                 "position": [
-                    5,
+                    39.6,
                     1,
-                    -0.5
+                    49.6
                 ],
                 "rotation": [
                     0,
@@ -288,22 +565,6 @@
                         "type": "Mesh Renderer",
                         "mesh": "trap",
                         "material": "trap"
-                    },
-                    {
-                        "type": "Movement",
-                        "linearVelocity": [
-                            1,
-                            0,
-                            0
-                        ],
-                      
-                        "boundaries": {
-                            "x": [
-                                -2,
-                                2
-                            ]
-                           
-                        }
                     }
                 ]
             }

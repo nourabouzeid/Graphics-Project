@@ -1,0 +1,535 @@
+{
+    "start-scene": "menu",
+    "window": {
+        "title": "Push Box Game",
+        "size": {
+            "width": 1280,
+            "height": 720
+        },
+        "fullscreen": false
+    },
+    "scene": {
+        "renderer": {
+            "sky": "assets/textures/sky.png",
+            "postprocess": "assets/shaders/postprocess/vignette.frag"
+        },
+        "assets": {
+            "shaders": {
+                "tinted": {
+                    "vs": "assets/shaders/tinted.vert",
+                    "fs": "assets/shaders/tinted.frag"
+                },
+                "textured": {
+                    "vs": "assets/shaders/textured.vert",
+                    "fs": "assets/shaders/textured.frag"
+                }
+            },
+            "textures": {
+                "wood": "assets/textures/wood.jpg",
+                "brick": "assets/textures/brick.png",
+                "metal": "assets/textures/metal.png",
+                "grass": "assets/textures/grass.png",
+                "target": "assets/textures/target.png",
+                "character": "assets/textures/character.png",
+                "box": "assets/textures/box.png",
+                "wall": "assets/textures/wall.png",
+                "floor": "assets/textures/floor.png"
+            },
+            "meshes": {
+                "cube": "assets/models/cube.obj",
+                "sphere": "assets/models/sphere.obj",
+                "plane": "assets/models/plane.obj",
+                "character": "assets/models/character.obj",
+                "box": "assets/models/box.obj",
+                "wall": "assets/models/wall.obj"
+            },
+            "samplers": {
+                "default": {},
+                "pixelated": {
+                    "MAG_FILTER": "GL_NEAREST"
+                }
+            },
+            "materials": {
+                "character": {
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling": {
+                            "enabled": true
+                        },
+                        "depthTesting": {
+                            "enabled": true
+                        }
+                    },
+                    "tint": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "texture": "character",
+                    "sampler": "default"
+                },
+                "floor": {
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling": {
+                            "enabled": true
+                        },
+                        "depthTesting": {
+                            "enabled": true
+                        }
+                    },
+                    "tint": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "texture": "floor",
+                    "sampler": "default"
+                },
+                "wall": {
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling": {
+                            "enabled": true
+                        },
+                        "depthTesting": {
+                            "enabled": true
+                        }
+                    },
+                    "tint": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "texture": "wall",
+                    "sampler": "default"
+                },
+                "box": {
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling": {
+                            "enabled": true
+                        },
+                        "depthTesting": {
+                            "enabled": true
+                        }
+                    },
+                    "tint": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "texture": "box",
+                    "sampler": "default"
+                },
+                "target": {
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling": {
+                            "enabled": false
+                        },
+                        "depthTesting": {
+                            "enabled": true
+                        },
+                        "blending": {
+                            "enabled": true
+                        }
+                    },
+                    "tint": [
+                        1,
+                        1,
+                        1,
+                        0.7
+                    ],
+                    "texture": "target",
+                    "sampler": "default"
+                }
+            }
+        },
+        "world": [
+            {
+                "name": "camera",
+                "position": [
+                    5,
+                    10,
+                    15
+                ],
+                "rotation": [
+                    -30,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Camera",
+                        "fov": 60,
+                        "near": 0.1,
+                        "far": 100
+                    },
+                    {
+                        "type": "Orbit Camera Controller",
+                        "target": [
+                            3,
+                            0,
+                            3
+                        ],
+                        "distance": 15,
+                        "minDistance": 5,
+                        "maxDistance": 25,
+                        "minPolarAngle": 20,
+                        "maxPolarAngle": 80
+                    }
+                ]
+            },
+            {
+                "name": "directionalLight",
+                "position": [
+                    5,
+                    10,
+                    5
+                ],
+                "components": [
+                    {
+                        "type": "Directional Light",
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "intensity": 0.8,
+                        "castShadows": true
+                    }
+                ]
+            },
+            {
+                "name": "ambientLight",
+                "components": [
+                    {
+                        "type": "Ambient Light",
+                        "color": [
+                            0.5,
+                            0.5,
+                            0.5
+                        ],
+                        "intensity": 0.2
+                    }
+                ]
+            },
+            {
+                "name": "floor",
+                "position": [
+                    0,
+                    -0.5,
+                    0
+                ],
+                "scale": [
+                    10,
+                    1,
+                    10
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "plane",
+                        "material": "floor"
+                    }
+                ]
+            },
+            {
+                "name": "player",
+                "position": [
+                    1,
+                    0,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "character",
+                        "material": "character"
+                    },
+                    {
+                        "type": "Player Controller",
+                        "speed": 5
+                    },
+                    {
+                        "type": "Box Collider",
+                        "size": [
+                            0.8,
+                            1.8,
+                            0.8
+                        ]
+                    }
+                ]
+            },
+            // Walls
+            {
+                "name": "wall_north",
+                "position": [
+                    3,
+                    0.5,
+                    5
+                ],
+                "scale": [
+                    6,
+                    1,
+                    0.2
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "cube",
+                        "material": "wall"
+                    },
+                    {
+                        "type": "Box Collider",
+                        "size": [
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "wall_south",
+                "position": [
+                    3,
+                    0.5,
+                    1
+                ],
+                "scale": [
+                    6,
+                    1,
+                    0.2
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "cube",
+                        "material": "wall"
+                    },
+                    {
+                        "type": "Box Collider",
+                        "size": [
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "wall_east",
+                "position": [
+                    5,
+                    0.5,
+                    3
+                ],
+                "scale": [
+                    0.2,
+                    1,
+                    4
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "cube",
+                        "material": "wall"
+                    },
+                    {
+                        "type": "Box Collider",
+                        "size": [
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "wall_west",
+                "position": [
+                    1,
+                    0.5,
+                    3
+                ],
+                "scale": [
+                    0.2,
+                    1,
+                    4
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "cube",
+                        "material": "wall"
+                    },
+                    {
+                        "type": "Box Collider",
+                        "size": [
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            // Interior walls
+            {
+                "name": "wall_interior1",
+                "position": [
+                    2,
+                    0.5,
+                    2
+                ],
+                "scale": [
+                    0.2,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "cube",
+                        "material": "wall"
+                    },
+                    {
+                        "type": "Box Collider",
+                        "size": [
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            // Boxes
+          {
+            "name": "placeholder_island_generator",
+            "components": [
+                {
+                    "type": "IslandGenerator",
+                    "startPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "islandCountMin": 3,
+                    "islandCountMax": 7,
+                    "gapSize": 2.0,
+                    "boxOnIsland": true,
+                    "excludeLastBox": true
+                }
+            ]
+        },
+            // Targets
+            {
+                "name": "target1",
+                "position": [
+                    4,
+                    0.01,
+                    4
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "plane",
+                        "material": "target",
+                        "scale": [
+                            0.8,
+                            0.8,
+                            0.8
+                        ]
+                    },
+                    {
+                        "type": "Target"
+                    }
+                ]
+            },
+            {
+                "name": "target2",
+                "position": [
+                    2,
+                    0.01,
+                    4
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "plane",
+                        "material": "target",
+                        "scale": [
+                            0.8,
+                            0.8,
+                            0.8
+                        ]
+                    },
+                    {
+                        "type": "Target"
+                    }
+                ]
+            },
+            // UI Elements
+            {
+                "name": "level_text",
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Text",
+                        "text": "Level 1",
+                        "fontSize": 24,
+                        "color": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ],
+                        "screenPosition": [
+                            20,
+                            20
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "moves_text",
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "components": [
+                    {
+                        "type": "Text",
+                        "text": "Moves: 0",
+                        "fontSize": 24,
+                        "color": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ],
+                        "screenPosition": [
+                            20,
+                            50
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
