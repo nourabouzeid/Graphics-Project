@@ -10,7 +10,8 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/fast_trigonometry.hpp>
-
+#include "../components/mesh-renderer.hpp"
+#include <iostream>
 namespace our
 {
 
@@ -36,13 +37,15 @@ namespace our
             // As soon as we find one, we break
             CameraComponent* camera = nullptr;
             FreeCameraControllerComponent *controller = nullptr;
+            MeshRendererComponent* monkey = nullptr;
             for(auto entity : world->getEntities()){
                 camera = entity->getComponent<CameraComponent>();
                 controller = entity->getComponent<FreeCameraControllerComponent>();
-                if(camera && controller) break;
+                monkey = entity->getComponent<MeshRendererComponent>();     // should be removed from here
+                if(camera && controller && monkey) break;
             }
             // If there is no entity with both a CameraComponent and a FreeCameraControllerComponent, we can do nothing so we return
-            if(!(camera && controller)) return;
+            if(!(camera && controller && monkey)) return;
             // Get the entity that we found via getOwner of camera (we could use controller->getOwner())
             Entity* entity = camera->getOwner();
 
@@ -95,18 +98,28 @@ namespace our
 
             glm::vec3 current_sensitivity = controller->positionSensitivity;
             // If the LEFT SHIFT key is pressed, we multiply the position sensitivity by the speed up factor
-            // if(app->getKeyboard().isPressed(GLFW_KEY_LEFT_SHIFT)) current_sensitivity *= controller->speedupFactor;
+            if(app->getKeyboard().isPressed(GLFW_KEY_LEFT_SHIFT)) current_sensitivity *= controller->speedupFactor;
 
-            // We change the camera position based on the keys WASD/QE
-            // S & W moves the player back and forth
-            // if(app->getKeyboard().isPressed(GLFW_KEY_W)) position += front * (deltaTime * current_sensitivity.z);
-            // if(app->getKeyboard().isPressed(GLFW_KEY_S)) position -= front * (deltaTime * current_sensitivity.z);
-            // // Q & E moves the player up and down
-            // if(app->getKeyboard().isPressed(GLFW_KEY_Q)) position += up * (deltaTime * current_sensitivity.y);
-            // if(app->getKeyboard().isPressed(GLFW_KEY_E)) position -= up * (deltaTime * current_sensitivity.y);
-            // // A & D moves the player left or right 
-            // if(app->getKeyboard().isPressed(GLFW_KEY_D)) position += right * (deltaTime * current_sensitivity.x);
-            // if(app->getKeyboard().isPressed(GLFW_KEY_A)) position -= right * (deltaTime * current_sensitivity.x);
+            // Assume we will move the monkey
+            // This code should be separated from here
+            if(monkey){
+                std::cout<<"HERE WE GO";
+                glm::vec3 &monkeyPos = monkey->getOwner()->localTransform.position;
+                glm::vec3 movementDirection = glm::normalize(-position);
+                movementDirection.y *= sin(glm::radians(currPitch));
+
+                // We change the camera position based on the keys WASD/QE
+                // S & W moves the player back and forth
+                if(app->getKeyboard().isPressed(GLFW_KEY_W)) monkeyPos += movementDirection * (deltaTime * current_sensitivity.z);
+                if(app->getKeyboard().isPressed(GLFW_KEY_S)) monkeyPos -= movementDirection * (deltaTime * current_sensitivity.z);
+                // Q & E moves the player up and down
+                // if(app->getKeyboard().isPressed(GLFW_KEY_Q)) monkeyPos += up * (deltaTime * current_sensitivity.y);
+                // if(app->getKeyboard().isPressed(GLFW_KEY_E)) monkeyPos -= up * (deltaTime * current_sensitivity.y);
+                // A & D moves the player left or right 
+                if(app->getKeyboard().isPressed(GLFW_KEY_D)) monkeyPos += glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+                if(app->getKeyboard().isPressed(GLFW_KEY_A)) monkeyPos -= glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+            }
+
         }
 
         // When the state exits, it should call this function to ensure the mouse is unlocked

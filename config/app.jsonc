@@ -145,11 +145,6 @@
             "type": "Mesh Renderer",
             "mesh": "monkey",
             "material": "monkey"
-          },
-          {
-            "type": "Movement",
-            "linearVelocity": [0, 0.1, 0],
-            "angularVelocity": [0, 45, 0]
           }
         ]
       },
