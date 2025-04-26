@@ -43,7 +43,7 @@ namespace our {
 
         const glm::vec3
             eyeWorld = M * eyeCamera,
-            centerWorld = M * centerCamera,
+            centerWorld = glm::vec3(0 , 0 , 0),
             upWorld = glm::normalize(glm::vec3(M * upCamera));
 
         glm::mat4 viewMatrix = glm::lookAt(eyeWorld, centerWorld, upWorld);
