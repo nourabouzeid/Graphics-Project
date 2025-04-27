@@ -128,23 +128,28 @@
     },
     "world": [
       {
-        "position": [0, 0, 10],
+        "position": [0, 5, 10],
         "components": [
           {
             "type": "Camera"
           },
           {
-            "type": "Free Camera Controller"
+            "type": "Free Camera Controller",
+            "radius": 15
           }
         ]
       },
       {
+        "name":"monkey",
         "rotation": [-45, 0, 0],
         "components": [
           {
             "type": "Mesh Renderer",
             "mesh": "monkey",
             "material": "monkey"
+          },
+          {
+            "type": "Free Movement"
           }
         ]
       },
