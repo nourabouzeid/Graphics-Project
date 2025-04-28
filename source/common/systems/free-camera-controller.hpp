@@ -21,6 +21,8 @@ namespace our
     class FreeCameraControllerSystem {
         Application* app; // The application in which the state runs
         bool mouse_locked = false; // Is the mouse locked
+        float currPitch = 30;
+        float currYaw = -90;
 
     public:
         // When a state enters, it should call this function and give it the pointer to the application
@@ -63,16 +65,16 @@ namespace our
             // If the left mouse button is pressed, we get the change in the mouse location
             // and use it to update the camera rotation
             // Compute initial pitch and yaw safely
-            float currPitch = glm::asin(glm::clamp(position.y / controller->radius, -1.0f, 1.0f));
-            float currYaw = glm::atan(position.z, position.x);
+            // float currPitch = glm::asin(glm::clamp(position.y / controller->radius, -1.0f, 1.0f));
+            // float currYaw = glm::atan(position.z, position.x);
 
             // Update angles based on mouse input
             if (app->getMouse().isPressed(GLFW_MOUSE_BUTTON_1)) {
                 glm::vec2 delta = app->getMouse().getMouseDelta();
                 currYaw += delta.x * controller->rotationSensitivity;
 
-                const float pitchLimit = glm::radians(89.0f);
-                currPitch = glm::clamp(currPitch, -pitchLimit, pitchLimit);
+                // const float pitchLimit = glm::radians(89.0f);
+                // currPitch = glm::clamp(currPitch, -pitchLimit, pitchLimit);
             }
 
             // Recalculate the new direction
@@ -83,7 +85,7 @@ namespace our
             direction = glm::normalize(direction);
 
             // Update position based on radius
-            position = controller->radius * direction;
+            position = 5.0f * direction;
 
             // We prevent the pitch from exceeding a certain angle from the XZ plane to prevent gimbal locks
             if (rotation.x < -glm::half_pi<float>() * 0.99f) rotation.x = -glm::half_pi<float>() * 0.99f;
