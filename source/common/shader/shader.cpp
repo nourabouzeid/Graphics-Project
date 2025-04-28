@@ -2,8 +2,11 @@
 
 #include <cassert>
 #include <iostream>
-#include <fstream>
+#include <filesystem>
 #include <string>
+#define STB_INCLUDE_LINE_GLSL
+#define STB_INCLUDE_IMPLEMENTATION
+#include <stb/stb_include.h>
 
 // Forward definition for error checking functions
 std::string checkForShaderCompilationErrors(GLuint shader);
@@ -11,16 +14,21 @@ std::string checkForLinkingErrors(GLuint program);
 
 bool our::ShaderProgram::attach(const std::string& filename, GLenum type) const
 {
-    // Here, we open the file and read a string from it containing the GLSL code of our shader
-    std::ifstream file(filename);
-    if (!file)
-    {
-        std::cerr << "ERROR: Couldn't open shader file: " << filename << std::endl;
+    auto file_path = std::filesystem::path(filename);
+    auto file_path_string = file_path.string();
+    auto parent_path_string = file_path.parent_path().string();
+    auto path_to_includes = &(parent_path_string[0]);
+    char error[256];
+
+    // Read the file as a string and resolve any "#include"s recursively
+    auto source = stb_include_file(&(file_path_string[0]), nullptr, path_to_includes, error);
+
+    // Check if any loading errors happened
+    if (source == nullptr) {
+        std::cerr << "ERROR: " << error << std::endl;
         return false;
     }
-    std::string sourceString = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
-    const char* sourceCStr = sourceString.c_str();
-    file.close();
+
 
     // TODO: Complete this function
     // Note: The function "checkForShaderCompilationErrors" checks if there is
@@ -28,8 +36,9 @@ bool our::ShaderProgram::attach(const std::string& filename, GLenum type) const
     //  compilation error and print it so that you can know what is wrong with
     //  the shader. The returned string will be empty if there is no errors.
     GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &sourceCStr, nullptr);
+    glShaderSource(shader, 1, &source, nullptr);
     glCompileShader(shader);
+    free(source);
 
     std::string errorLog = checkForShaderCompilationErrors(shader);
     if (!errorLog.empty())

@@ -1,8 +1,7 @@
 #include "material.hpp"
-
 #include "../asset-loader.hpp"
 #include "deserialize-utils.hpp"
-
+#include<iostream>
 namespace our
 {
 
@@ -18,7 +17,7 @@ namespace our
     }
 
     // This function read the material data from a json object
-    void Material::deserialize(const nlohmann::json &data)
+    void Material::deserialize(const nlohmann::json& data)
     {
         if (!data.is_object())
             return;
@@ -45,7 +44,7 @@ namespace our
     }
 
     // This function read the material data from a json object
-    void TintedMaterial::deserialize(const nlohmann::json &data)
+    void TintedMaterial::deserialize(const nlohmann::json& data)
     {
         Material::deserialize(data);
         if (!data.is_object())
@@ -75,13 +74,86 @@ namespace our
     }
 
     // This function read the material data from a json object
-    void TexturedMaterial::deserialize(const nlohmann::json &data)
+    void TexturedMaterial::deserialize(const nlohmann::json& data)
     {
         TintedMaterial::deserialize(data);
         if (!data.is_object())
             return;
         alphaThreshold = data.value("alphaThreshold", 0.0f);
         texture = AssetLoader<Texture2D>::get(data.value("texture", ""));
+        sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
+    }
+    void LitMaterial::setup() const {
+        // Call the base Material setup first
+        Material::setup();
+        shader->set("material.albedo_tint", albedoTint);
+        shader->set("material.specular_tint", specularTint);
+        shader->set("material.emissive_tint", emissiveTint);
+        shader->set("material.roughness_range", roughnessRange);
+        shader->set("alphaThreshold", alphaThreshold);
+
+        // Bind textures and samplers to texture units
+        int textureUnit = 0;
+
+        if (albedoMap) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            albedoMap->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.albedo_map", textureUnit++);
+        }
+
+        if (specularMap) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            specularMap->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.specular_map", textureUnit++);
+        }
+
+        if (roughnessMap) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            roughnessMap->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.roughness_map", textureUnit++);
+        }
+
+        if (ambientMap) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            ambientMap->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.ambient_occlusion_map", textureUnit++);
+        }
+
+        if (emissiveMap) {
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            emissiveMap->bind();
+            sampler->bind(textureUnit);
+            shader->set("material.emissive_map", textureUnit);
+        }
+    }
+
+    void LitMaterial::deserialize(const nlohmann::json& data) {
+        // Call the base Material deserialize first
+        Material::deserialize(data);
+
+        if (!data.is_object())
+            return;
+
+        // Load alpha threshold
+        alphaThreshold = data.value("alphaThreshold", 0.0f);
+        albedoTint = data.value("albedoTint", glm::vec3(0.3f));
+        specularTint = data.value("specularTint", glm::vec3(1.0f));
+        emissiveTint = data.value("emissiveTint", glm::vec3(1.0f));
+        roughnessRange = data.value("roughnessRange", glm::vec2(0.0f, 1.0f));
+
+
+        // Load textures
+        albedoMap = AssetLoader<Texture2D>::get(data.value("albedoMap", ""));
+        specularMap = AssetLoader<Texture2D>::get(data.value("specularMap", ""));
+        roughnessMap = AssetLoader<Texture2D>::get(data.value("roughnessMap", ""));
+        ambientMap = AssetLoader<Texture2D>::get(data.value("ambientMap", ""));
+        emissiveMap = AssetLoader<Texture2D>::get(data.value("emissiveMap", ""));
+
+        // Load sampler (shared for all textures)
         sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
     }
 

@@ -1,0 +1,236 @@
+{
+    "start-scene": "menu",
+    "window": {
+      "title": "Default Game Window",
+      "size": {
+        "width": 1280,
+        "height": 720
+      },
+      "fullscreen": false
+    },
+    "scene": {
+      "renderer": {
+        "sky": "assets/textures/sky.jpg",
+        "postprocess": "assets/shaders/postprocess/vignette.frag"
+      },
+      "assets": {
+        "shaders": {
+          "lit": {
+            "vs": "assets/shaders/light/light.vert",
+            "fs": "assets/shaders/light/light.frag"
+          },
+          "textured":{
+            "vs":"assets/shaders/textured.vert",
+            "fs":"assets/shaders/textured.frag"
+        }
+        },
+        "textures": {
+          "checkerboard_albedo": "assets/textures/checkerboard/albedo.png",
+          "checkerboard_specular": "assets/textures/checkerboard/specular.png",
+          "checkerboard_roughness": "assets/textures/checkerboard/roughness.png",
+          "asphalt_albedo": "assets/textures/asphalt/albedo.jpg",
+          "asphalt_specular": "assets/textures/asphalt/specular.jpg",
+          "asphalt_roughness": "assets/textures/asphalt/roughness.jpg",
+          "asphalt_emissive": "assets/textures/asphalt/emissive.jpg",
+          "suzanne_ambient_occlusion": "assets/textures/suzanne/ambient_occlusion.jpg",
+          "metal_albedo": "assets/textures/metal/albedo.jpg",
+          "metal_specular": "assets/textures/metal/specular.jpg",
+          "metal_roughness": "assets/textures/metal/roughness.jpg",
+          "wood_albedo": "assets/textures/wood/albedo.jpg",
+          "wood_specular": "assets/textures/wood/specular.jpg",
+          "wood_roughness": "assets/textures/wood/roughness.jpg",
+          "black": "assets/textures/black.png",
+          "moon": "assets/textures/moon.jpg",
+          "house": "assets/textures/house.jpeg"
+        },
+        "meshes": {
+          "plane": "assets/models/plane.obj",
+          "suzanne": "assets/models/monkey.obj",
+          "sphere": "assets/models/sphere.obj",
+          "house": "assets/models/house.obj"
+        },
+        "samplers": {
+          "default": {}
+        },
+        "materials": {
+          "ground": {
+            "type": "textured",
+            "shader": "textured",
+            "pipelineState": {
+                "faceCulling":{
+                    "enabled": false
+                },
+                "depthTesting":{
+                    "enabled": true
+                }
+            },
+            "tint": [1, 1, 1, 1],
+            "texture": "checkerboard_albedo",
+            "sampler": "default"
+          },
+          "asphalt_suzanne": {
+            "type": "lit",
+            "shader": "lit",
+            "albedoMap": "asphalt_albedo",
+            "specularMap": "asphalt_specular",
+            "roughnessMap": "asphalt_roughness",
+            "ambientMap": "suzanne_ambient_occlusion",
+            "emissiveMap": "asphalt_emissive",
+            "sampler": "default"
+          },
+          "metal_suzanne": {
+            "type": "lit",
+            "shader": "lit",
+            "albedoMap": "metal_albedo",
+            "specularMap": "metal_specular",
+            "roughnessMap": "metal_roughness",
+            "ambientMap": "suzanne_ambient_occlusion",
+            "sampler": "default"
+          },
+          "wood_suzanne": {
+            "type": "lit",
+            "shader": "lit",
+            "albedoMap": "wood_albedo",
+            "specularMap": "wood_specular",
+            "roughnessMap": "wood_roughness",
+            "ambientMap": "suzanne_ambient_occlusion",
+            "sampler": "default"
+          },
+          "moon": {
+            "type": "lit",
+            "shader": "lit",
+            "albedoMap": "black",
+            "emissiveMap": "moon",
+            "sampler": "default"
+          },
+          "house": {
+            "type": "lit",
+            "shader": "lit",
+            "albedoMap": "house",
+            "sampler": "default"
+          }
+        }
+      },
+      "world": [
+        {
+          "position": [0, 5, 20],
+          "components": [
+            { "type": "Camera" },
+            { "type": "Free Camera Controller" }
+          ]
+        },
+        {
+          "position": [0, -0.5, 0],
+          "scale": [500, 1, 500],
+          "components": [
+            {
+              "type": "Mesh Renderer",
+              "mesh": "plane",
+              "material": "ground"
+            }
+          ]
+        },
+        {
+          "position": [-3, 1, 0],
+          "components": [
+            {
+              "type": "Mesh Renderer",
+              "mesh": "suzanne",
+              "material": "asphalt_suzanne"
+            }
+          ]
+        },
+        {
+          "position": [0, 1, 0],
+          "components": [
+            {
+              "type": "Mesh Renderer",
+              "mesh": "suzanne",
+              "material": "metal_suzanne"
+            }
+          ]
+        },
+        {
+          "position": [3, 1, 0],
+          "components": [
+            {
+              "type": "Mesh Renderer",
+              "mesh": "suzanne",
+              "material": "wood_suzanne"
+            }
+          ]
+        },
+        {
+          "position": [0, 0, -5],
+          "components": [
+            {
+              "type": "Mesh Renderer",
+              "mesh": "house",
+              "material": "house"
+            }
+          ]
+        },
+        {
+          "position": [10, 10, -10],
+          "rotation": [45, 22.5, 45],
+          "children": [
+            {
+              "scale": [3, 3, 3],
+              "components": [
+                {
+                  "type": "Mesh Renderer",
+                  "mesh": "sphere",
+                  "material": "moon"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rotation": [45, 45, 0], // Direction is controlled by rotation
+          "components": [
+              {
+                  "type": "Light",
+                  "lightType": "directional",
+                  "color": [1.0, 0.8, 0.2]
+              }
+          ]
+      },
+      
+      /* Point Light */
+      {
+          "position": [0, 1, 3], // Position is part of entity transform
+          "components": [
+              {
+                  "type": "Light",
+                  "lightType": "point",
+                  "color": [0.2, 1.0, 0.5],
+                  "attenuationConstant": 1.0,
+                  "attenuationLinear": 0.007,
+                  "attenuationQuadratic": 0.0014
+              }
+          ]
+      },
+      
+      /* Spot Light */
+      {
+          "position": [0, 1, -4], // Position is part of entity transform
+          "rotation": [0, 0, 0], // Direction is controlled by rotation
+          "components": [
+              {
+                  "type": "Light",
+                  "lightType": "spot",
+                  "color": [1.0, 0.1, 0.2],
+                  "innerAngle": 0.78539816339, // 45 degrees in radians
+                  "outerAngle": 1.57079632679, // 90 degrees in radians
+                  "attenuationConstant": 1.0,
+                  "attenuationLinear": 0.007,
+                  "attenuationQuadratic": 0.0014
+              }
+          ]
+      }
+        
+      ]
+    }
+  }
+  

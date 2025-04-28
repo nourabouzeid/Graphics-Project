@@ -7,6 +7,7 @@
 #include "free-movement.hpp"
 #include "movement.hpp"
 #include<iostream>
+#include "light.hpp"
 
 namespace our {
 
@@ -30,6 +31,9 @@ namespace our {
         }
         else if (type == FreeMovementComponent::getID()) {
             component = entity->addComponent<FreeMovementComponent>();
+        }
+        else if (type == LightComponent::getID()) {
+            component = entity->addComponent<LightComponent>();
         }
         if (component) component->deserialize(data);
     }
