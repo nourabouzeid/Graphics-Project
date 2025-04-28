@@ -42,8 +42,8 @@ std::string default_screenshot_filepath()
     return stream.str();
 }
 
-void getLocalTime(struct tm *localTime, time_t *currentTime)
-{
+
+void getLocalTime(struct tm* localTime, time_t* currentTime) {
 #ifdef _WIN32
     localtime_s(localTime, currentTime);
 #else
@@ -51,89 +51,65 @@ void getLocalTime(struct tm *localTime, time_t *currentTime)
 #endif
 }
 // This function will be used to log errors thrown by GLFW
-void glfw_error_callback(int error, const char *description)
-{
+void glfw_error_callback(int error, const char* description) {
     std::cerr << "GLFW Error: " << error << ": " << description << std::endl;
 }
 
 // This function will be used to log OpenGL debug messages
-void GLAPIENTRY opengl_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
+void GLAPIENTRY opengl_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
     std::string _source;
     std::string _type;
     std::string _severity;
 
     // What is the source of the message
-    switch (source)
-    {
+    switch (source) {
     case GL_DEBUG_SOURCE_API:
-        _source = "API";
-        break;
+        _source = "API"; break;
     case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-        _source = "WINDOW SYSTEM";
-        break;
+        _source = "WINDOW SYSTEM"; break;
     case GL_DEBUG_SOURCE_SHADER_COMPILER:
-        _source = "SHADER COMPILER";
-        break;
+        _source = "SHADER COMPILER"; break;
     case GL_DEBUG_SOURCE_THIRD_PARTY:
-        _source = "THIRD PARTY";
-        break;
+        _source = "THIRD PARTY"; break;
     case GL_DEBUG_SOURCE_APPLICATION:
-        _source = "APPLICATION";
-        break;
-    case GL_DEBUG_SOURCE_OTHER:
-    default:
-        _source = "UNKNOWN";
-        break;
+        _source = "APPLICATION"; break;
+    case GL_DEBUG_SOURCE_OTHER: default:
+        _source = "UNKNOWN"; break;
     }
 
     // What is the type of the message (error, warning, etc).
-    switch (type)
-    {
+    switch (type) {
     case GL_DEBUG_TYPE_ERROR:
-        _type = "ERROR";
-        break;
+        _type = "ERROR"; break;
     case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-        _type = "DEPRECATED BEHAVIOR";
-        break;
+        _type = "DEPRECATED BEHAVIOR"; break;
     case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-        _type = "UDEFINED BEHAVIOR";
-        break;
+        _type = "UDEFINED BEHAVIOR"; break;
     case GL_DEBUG_TYPE_PORTABILITY:
-        _type = "PORTABILITY";
-        break;
+        _type = "PORTABILITY"; break;
     case GL_DEBUG_TYPE_PERFORMANCE:
-        _type = "PERFORMANCE";
-        break;
+        _type = "PERFORMANCE"; break;
     case GL_DEBUG_TYPE_OTHER:
-        _type = "OTHER";
-        break;
+        _type = "OTHER"; break;
     case GL_DEBUG_TYPE_MARKER:
-        _type = "MARKER";
-        break;
+        _type = "MARKER"; break;
     default:
-        _type = "UNKNOWN";
-        break;
+        _type = "UNKNOWN"; break;
     }
 
     // How severe is the message
-    switch (severity)
-    {
+    switch (severity) {
     case GL_DEBUG_SEVERITY_HIGH:
-        _severity = "HIGH";
-        break;
+        _severity = "HIGH"; break;
     case GL_DEBUG_SEVERITY_MEDIUM:
-        _severity = "MEDIUM";
-        break;
+        _severity = "MEDIUM"; break;
     case GL_DEBUG_SEVERITY_LOW:
-        _severity = "LOW";
-        break;
+        _severity = "LOW"; break;
     case GL_DEBUG_SEVERITY_NOTIFICATION:
-        _severity = "NOTIFICATION";
-        break;
+        _severity = "NOTIFICATION"; break;
     default:
-        _severity = "UNKNOWN";
-        break;
+        _severity = "UNKNOWN"; break;
     }
 
     // std::cout << "OpenGL Debug Message " << id << " (type: " << _type << ") of " << _severity
@@ -186,7 +162,7 @@ our::WindowConfiguration our::Application::getWindowConfiguration()
 
     bool isFullScreen = window_config["fullscreen"].get<bool>();
 
-    return {title, {width, height}, isFullScreen};
+    return { title, {width, height}, isFullScreen };
 }
 
 // This is the main class function that run the whole application (Initialize, Game loop, House cleaning).
@@ -199,8 +175,7 @@ int our::Application::run(int run_for_frames)
     glfwSetErrorCallback(glfw_error_callback);
 
     // Initialize GLFW and exit if it failed
-    if (!glfwInit())
-    {
+    if (!glfwInit()) {
         std::cerr << "Failed to Initialize GLFW" << std::endl;
         return -1;
     }
@@ -211,11 +186,10 @@ int our::Application::run(int run_for_frames)
 
     // Create a window with the given "WindowConfiguration" attributes.
     // If it should be fullscreen, monitor should point to one of the monitors (e.g. primary monitor), otherwise it should be null
-    GLFWmonitor *monitor = win_config.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
+    GLFWmonitor* monitor = win_config.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
     // The last parameter "share" can be used to share the resources (OpenGL objects) between multiple windows.
     window = glfwCreateWindow(win_config.size.x, win_config.size.y, win_config.title.c_str(), monitor, nullptr);
-    if (!window)
-    {
+    if (!window) {
         std::cerr << "Failed to Create Window" << std::endl;
         glfwTerminate();
         return -1;
@@ -245,11 +219,11 @@ int our::Application::run(int run_for_frames)
     keyboard.enable(window);
     mouse.enable(window);
 
-// Start the ImGui context and set dark style (just my preference :D)
+    // Start the ImGui context and set dark style (just my preference :D)
 #ifdef _WIN32
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
+    ImGuiIO& io = ImGui::GetIO();
     ImGui::StyleColorsDark();
 
     // Initialize ImGui for GLFW and OpenGL
@@ -262,41 +236,33 @@ int our::Application::run(int run_for_frames)
     std::priority_queue<
         ScreenshotRequest,
         std::vector<ScreenshotRequest>,
-        std::greater<ScreenshotRequest>>
-        requested_screenshots;
-    if (auto &screenshots = app_config["screenshots"]; screenshots.is_object())
-    {
+        std::greater<ScreenshotRequest>> requested_screenshots;
+    if (auto& screenshots = app_config["screenshots"]; screenshots.is_object()) {
         auto base_path = std::filesystem::path(screenshots.value("directory", "screenshots"));
-        if (auto &requests = screenshots["requests"]; requests.is_array())
-        {
-            for (auto &item : requests)
-            {
+        if (auto& requests = screenshots["requests"]; requests.is_array()) {
+            for (auto& item : requests) {
                 auto path = base_path / item.value("file", "");
                 int frame = item.value("frame", 0);
-                requested_screenshots.push({frame, path.string()});
+                requested_screenshots.push({ frame, path.string() });
             }
         }
     }
 
     // If a scene change was requested, apply it
-    if (nextState)
-    {
+    if (nextState) {
         currentState = nextState;
         nextState = nullptr;
     }
     // Call onInitialize if the scene needs to do some custom initialization (such as file loading, object creation, etc).
-    if (currentState)
-        currentState->onInitialize();
+    if (currentState) currentState->onInitialize();
 
     // The time at which the last frame started. But there was no frames yet, so we'll just pick the current time.
     double last_frame_time = glfwGetTime();
     int current_frame = 0;
 
-    // Game loop
-    while (!glfwWindowShouldClose(window))
-    {
-        if (run_for_frames != 0 && current_frame >= run_for_frames)
-            break;
+    //Game loop
+    while (!glfwWindowShouldClose(window)) {
+        if (run_for_frames != 0 && current_frame >= run_for_frames) break;
         glfwPollEvents(); // Read all the user events and call relevant callbacks.
 
 #ifdef _WIN32
@@ -305,8 +271,7 @@ int our::Application::run(int run_for_frames)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        if (currentState)
-            currentState->onImmediateGui(); // Call to run any required Immediate GUI.
+        if (currentState) currentState->onImmediateGui(); // Call to run any required Immediate GUI.
 
         // If ImGui is using the mouse or keyboard, then we don't want the captured events to affect our keyboard and mouse objects.
         // For example, if you're focusing on an input and writing "W", the keyboard object shouldn't record this event.
@@ -326,8 +291,7 @@ int our::Application::run(int run_for_frames)
         double current_frame_time = glfwGetTime();
 
         // Call onDraw, in which we will draw the current frame, and send to it the time difference between the last and current frame
-        if (currentState)
-            currentState->onDraw(current_frame_time - last_frame_time);
+        if (currentState) currentState->onDraw(current_frame_time - last_frame_time);
         last_frame_time = current_frame_time; // Then update the last frame start time (this frame is now the last frame)
 
 #if defined(ENABLE_OPENGL_DEBUG_MESSAGES)
@@ -341,42 +305,34 @@ int our::Application::run(int run_for_frames)
 #endif
 
 #if defined(ENABLE_OPENGL_DEBUG_MESSAGES)
-                                                                // Re-enable the debug messages
+        // Re-enable the debug messages
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 #endif
 
         // If F12 is pressed, take a screenshot
-        if (keyboard.justPressed(GLFW_KEY_F12))
-        {
+        if (keyboard.justPressed(GLFW_KEY_F12)) {
             glViewport(0, 0, frame_buffer_size.x, frame_buffer_size.y);
             std::string path = default_screenshot_filepath();
-            if (our::screenshot_png(path))
-            {
+            if (our::screenshot_png(path)) {
                 std::cout << "Screenshot saved to: " << path << std::endl;
             }
-            else
-            {
+            else {
                 std::cerr << "Failed to save a Screenshot" << std::endl;
             }
         }
         // There are any requested screenshots, take them
-        while (requested_screenshots.size())
-        {
-            if (const auto &request = requested_screenshots.top(); request.first == current_frame)
-            {
-                if (our::screenshot_png(request.second))
-                {
+        while (requested_screenshots.size()) {
+            if (const auto& request = requested_screenshots.top(); request.first == current_frame) {
+                if (our::screenshot_png(request.second)) {
                     std::cout << "Screenshot saved to: " << request.second << std::endl;
                 }
-                else
-                {
+                else {
                     std::cerr << "Failed to save a screenshot to: " << request.second << std::endl;
                 }
                 requested_screenshots.pop();
             }
-            else
-                break;
+            else break;
         }
 
         // Swap the frame buffers
@@ -387,11 +343,9 @@ int our::Application::run(int run_for_frames)
         mouse.update();
 
         // If a scene change was requested, apply it
-        while (nextState)
-        {
+        while (nextState) {
             // If a scene was already running, destroy it (not delete since we can go back to it later)
-            if (currentState)
-                currentState->onDestroy();
+            if (currentState) currentState->onDestroy();
             // Switch scenes
             currentState = nextState;
             nextState = nullptr;
@@ -403,8 +357,7 @@ int our::Application::run(int run_for_frames)
     }
 
     // Call for cleaning up
-    if (currentState)
-        currentState->onDestroy();
+    if (currentState) currentState->onDestroy();
 
 #ifdef _WIN32
     // Shutdown ImGui & destroy the context
@@ -435,46 +388,46 @@ void our::Application::setupCallbacks()
     // In the inline function we retrieve the window instance and use it to set our (Mouse/Keyboard) classes values.
 
     // Keyboard callbacks
-    glfwSetKeyCallback(window, [](GLFWwindow *window, int key, int scancode, int action, int mods)
-                       {
+    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
         auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-        if(app){
+        if (app) {
             app->getKeyboard().keyEvent(key, scancode, action, mods);
-            if(app->currentState) app->currentState->onKeyEvent(key, scancode, action, mods);
-        } });
+            if (app->currentState) app->currentState->onKeyEvent(key, scancode, action, mods);
+        }
+        });
 
     // mouse position callbacks
-    glfwSetCursorPosCallback(window, [](GLFWwindow *window, double x_position, double y_position)
-                             {
+    glfwSetCursorPosCallback(window, [](GLFWwindow* window, double x_position, double y_position) {
         auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-        if(app){
+        if (app) {
             app->getMouse().CursorMoveEvent(x_position, y_position);
-            if(app->currentState) app->currentState->onCursorMoveEvent(x_position, y_position);
-        } });
+            if (app->currentState) app->currentState->onCursorMoveEvent(x_position, y_position);
+        }
+        });
 
     // mouse position callbacks
-    glfwSetCursorEnterCallback(window, [](GLFWwindow *window, int entered)
-                               {
+    glfwSetCursorEnterCallback(window, [](GLFWwindow* window, int entered) {
         auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-        if(app){
-            if(app->currentState) app->currentState->onCursorEnterEvent(entered);
-        } });
+        if (app) {
+            if (app->currentState) app->currentState->onCursorEnterEvent(entered);
+        }
+        });
 
     // mouse button position callbacks
-    glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int button, int action, int mods)
-                               {
+    glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
         auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-        if(app){
+        if (app) {
             app->getMouse().MouseButtonEvent(button, action, mods);
-            if(app->currentState) app->currentState->onMouseButtonEvent(button, action, mods);
-        } });
+            if (app->currentState) app->currentState->onMouseButtonEvent(button, action, mods);
+        }
+        });
 
     // mouse scroll callbacks
-    glfwSetScrollCallback(window, [](GLFWwindow *window, double x_offset, double y_offset)
-                          {
+    glfwSetScrollCallback(window, [](GLFWwindow* window, double x_offset, double y_offset) {
         auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-        if(app){
+        if (app) {
             app->getMouse().ScrollEvent(x_offset, y_offset);
-            if(app->currentState) app->currentState->onScrollEvent(x_offset, y_offset);
-        } });
+            if (app->currentState) app->currentState->onScrollEvent(x_offset, y_offset);
+        }
+        });
 }
