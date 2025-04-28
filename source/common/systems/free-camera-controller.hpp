@@ -21,9 +21,8 @@ namespace our
     class FreeCameraControllerSystem {
         Application* app; // The application in which the state runs
         bool mouse_locked = false; // Is the mouse locked
-        float currPitch = 30;
-        float currYaw = -90;
-
+        float currPitch = -1;
+        float currYaw = -1;
     public:
         // When a state enters, it should call this function and give it the pointer to the application
         void enter(Application* app) {
@@ -65,16 +64,18 @@ namespace our
             // If the left mouse button is pressed, we get the change in the mouse location
             // and use it to update the camera rotation
             // Compute initial pitch and yaw safely
-            // float currPitch = glm::asin(glm::clamp(position.y / controller->radius, -1.0f, 1.0f));
-            // float currYaw = glm::atan(position.z, position.x);
+            if (currPitch == -1 || currYaw == -1) {
+                currPitch = atan2(position.y, glm::sqrt(position.x * position.x + position.z * position.z));
+                currYaw = atan2(position.z, position.x);
+            }
 
             // Update angles based on mouse input
             if (app->getMouse().isPressed(GLFW_MOUSE_BUTTON_1)) {
                 glm::vec2 delta = app->getMouse().getMouseDelta();
                 currYaw += delta.x * controller->rotationSensitivity;
 
-                // const float pitchLimit = glm::radians(89.0f);
-                // currPitch = glm::clamp(currPitch, -pitchLimit, pitchLimit);
+                const float pitchLimit = glm::radians(89.0f);
+                currPitch = glm::clamp(currPitch, -pitchLimit, pitchLimit);
             }
 
             // Recalculate the new direction
@@ -85,7 +86,8 @@ namespace our
             direction = glm::normalize(direction);
 
             // Update position based on radius
-            position = 5.0f * direction;
+            float radius = glm::length(position);
+            position = radius * direction;
 
             // We prevent the pitch from exceeding a certain angle from the XZ plane to prevent gimbal locks
             if (rotation.x < -glm::half_pi<float>() * 0.99f) rotation.x = -glm::half_pi<float>() * 0.99f;

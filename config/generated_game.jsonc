@@ -151,8 +151,8 @@
             {
                 "position": [
                     0,
-                    0,
-                    10
+                    2,
+                    2
                 ],
                 "components": [
                     {
@@ -184,6 +184,9 @@
                         "type": "Mesh Renderer",
                         "mesh": "character",
                         "material": "character"
+                    },
+                    {
+                        "type": "Free Movement"
                     }
                 ]
             },
