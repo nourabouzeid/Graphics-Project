@@ -3,7 +3,10 @@
 #include "../ecs/world.hpp"
 #include "../components/camera.hpp"
 #include "../components/mesh-renderer.hpp"
+#include "../components/light.hpp"
 #include "../asset-loader.hpp"
+#include "light-utils.hpp"
+
 
 #include <glad/gl.h>
 #include <vector>
@@ -11,7 +14,7 @@
 
 namespace our
 {
-    
+
     // The render command stores command that tells the renderer that it should draw
     // the given mesh at the given localToWorld matrix using the given material
     // The renderer will fill this struct using the mesh renderer components
@@ -38,7 +41,7 @@ namespace our
         TexturedMaterial* skyMaterial;
         // Objects used for Postprocessing
         GLuint postprocessFrameBuffer, postProcessVertexArray;
-        Texture2D *colorTarget, *depthTarget;
+        Texture2D* colorTarget, * depthTarget;
         TexturedMaterial* postprocessMaterial;
     public:
         // Initialize the renderer including the sky and the Postprocessing objects.

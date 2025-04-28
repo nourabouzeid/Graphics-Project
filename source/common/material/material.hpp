@@ -52,6 +52,17 @@ namespace our {
         void setup() const override;
         void deserialize(const nlohmann::json& data) override;
     };
+    class LitMaterial : public Material {
+    public:
+        Texture2D* albedoMap, * specularMap, * roughnessMap, * ambientMap, * emissiveMap;
+        Sampler* sampler;
+        glm::vec3 albedoTint, emissiveTint, specularTint;
+        glm::vec2 roughnessRange;
+        float alphaThreshold;
+
+        void setup() const override;
+        void deserialize(const nlohmann::json& data) override;
+    };
 
     // This function returns a new material instance based on the given type
     inline Material* createMaterialFromType(const std::string& type) {
@@ -60,6 +71,9 @@ namespace our {
         }
         else if (type == "textured") {
             return new TexturedMaterial();
+        }
+        else if (type == "lit") {
+            return new LitMaterial();
         }
         else {
             return new Material();
