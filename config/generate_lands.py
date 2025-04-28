@@ -1,42 +1,23 @@
 import json
 import random
 
-ISLAND_SIZE = 20
 width = 4
 height = 4
 NUM_ISLANDS = random.randint(4, 7)
 DIRECTIONS = ['left', 'up', 'right']
 
-StartPositonLand= (2.2, 0, 0)
-
-
-DIR_VECTORS = {
-    'up': (0, 0, ISLAND_SIZE),
-    'left': (-ISLAND_SIZE, 0, 0),
-    'right': (ISLAND_SIZE, 0, 0)
-}
-
 def round_vector(vec, decimals=1):
     return [round(x, decimals) for x in vec]
 def generate_valid_path(num_islands):
-    seed = 2
-    last = 3
-    m = 17
     path = []
     prev = None
     for _ in range(num_islands - 1):
         while True:
-            glc = seed * last + m
-            seed = glc % 3
-            last = last + 1
-            if last > 100:
-                last = 0
-
             dir = random.choice(DIRECTIONS)
 
-            if prev == 'left' and dir in ['left', 'right']:
+            if prev == 'left' and dir == 'right':
                 continue
-            if prev == 'right' and dir in ['left', 'right']:
+            if prev == 'right' and dir == 'left':
                 continue
             if prev == 'up' and dir == 'up':
                 continue
@@ -49,27 +30,27 @@ def generate_valid_path(num_islands):
 
 
 def island_position_from_path(path):
-    pos = [(0, 0, 0)]
+    positions = [(0, 0, 0)]
     current = (0, 0, 0)
 
-
-
     for i in range(len(path)):
-        if path[i] == 'left':
-            if i > 2 and path[i - 3] == 'right':
-                current = (current[0] - 4 - width, current[1], current[2])
-            else:
-                current = (current[0] - 2 - height, current[1], current[2])
-        elif path[i] == 'right':
-            if i > 2 and path[i - 3] == 'left':
-                current = (current[0] + 4 + width, current[1], current[2])
-            else:
-                current = (current[0] + 2 + height, current[1], current[2])
+        if path[i] == 'right':
+            # if i > 2 and path[i - 3] == 'left':
+            #     current = (current[0] - 4 - width, current[1], current[2])
+            # else:
+            current = (current[0] - 2 - height, current[1], current[2])
+        elif path[i] == 'left':
+            # if i > 2 and path[i - 3] == 'right':
+            #     current = (current[0] + 4 + width, current[1], current[2])
+            # else:
+            current = (current[0] + 2 + height, current[1], current[2])
         else:
             current = (current[0], current[1], current[2] + 2 + height)
 
-        pos.append(current)
-    return pos
+        positions.append(current)
+
+    print(positions)
+    return positions
 
 def random_trap_velocity():
     directions = [
@@ -163,9 +144,9 @@ def generate_scene():
             ]
         })
 
-        if i < len(positions) - 1:
+        if i < len(positions):
             # Box
-            box_pos = [pos[0] , .3, pos[2] ]
+            box_pos = [pos[0] , .3, pos[2]]
             world.append({
                 "position": round_vector(box_pos),
                 "rotation": [0, 0, 0],
@@ -359,4 +340,4 @@ scene_data = generate_scene()
 with open("./config/generated_game.jsonc", "w") as f:
     json.dump(scene_data, f, indent=4)
 
-print("✅ Scene JSON generated as 'generated_scene.json'")
+print("Scene JSON generated as 'generated_scene.json'")
