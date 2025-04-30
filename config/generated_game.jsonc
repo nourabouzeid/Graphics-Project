@@ -1,755 +1,434 @@
 {
-    "start-scene": "play",
-    "window": {
-        "title": "Push Box Game",
-        "size": {
-            "width": 1280,
-            "height": 720
-        },
-        "fullscreen": false
+  "start-scene": "play",
+  "window": {
+    "title": "Push Box Game",
+    "size": {
+      "width": 1280,
+      "height": 720
     },
-    "scene": {
-        "renderer": {
-            "sky": "assets/textures/sky.png",
-            "postprocess": "assets/shaders/postprocess/vignette.frag"
+    "fullscreen": false
+  },
+  "scene": {
+    "renderer": {
+      "sky": "assets/textures/sky.png",
+      "postprocess": "assets/shaders/postprocess/vignette.frag"
+    },
+    "assets": {
+      "shaders": {
+        "tinted": {
+          "vs": "assets/shaders/tinted.vert",
+          "fs": "assets/shaders/tinted.frag"
         },
-        "assets": {
-            "shaders": {
-                "tinted": {
-                    "vs": "assets/shaders/tinted.vert",
-                    "fs": "assets/shaders/tinted.frag"
-                },
-                "textured": {
-                    "vs": "assets/shaders/textured.vert",
-                    "fs": "assets/shaders/textured.frag"
-                }
+        "textured": {
+          "vs": "assets/shaders/textured.vert",
+          "fs": "assets/shaders/textured.frag"
+        }
+      },
+      "textures": {
+        "character": "assets/textures/colormap.png",
+        "groundEarth": "assets/textures/ground_new4.jpg",
+        "box": "assets/textures/1335133419679.png",
+        "key": "assets/textures/gold.png",
+        "trap": "assets/textures/trap.png"
+      },
+      "meshes": {
+        "character": "assets/models/character-male-a.obj",
+        "groundEarth": "assets/models/ground_new4.obj",
+        "box": "assets/models/box.obj",
+        "key": "assets/models/key.obj",
+        "trap": "assets/models/trap.obj"
+      },
+      "samplers": {
+        "default": {},
+        "pixelated": {
+          "MAG_FILTER": "GL_NEAREST"
+        }
+      },
+      "materials": {
+        "character": {
+          "type": "textured",
+          "shader": "textured",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
             },
-            "textures": {
-                "character": "assets/textures/colormap.png",
-                "groundEarth": "assets/textures/ground_new4.jpg",
-                "box": "assets/textures/1335133419679.png",
-                "key": "assets/textures/gold.png",
-                "trap": "assets/textures/trap.png"
-            },
-            "meshes": {
-                "character": "assets/models/character-male-a.obj",
-                "groundEarth": "assets/models/ground_new4.obj",
-                "box": "assets/models/box.obj",
-                "key": "assets/models/key.obj",
-                "trap": "assets/models/trap.obj"
-            },
-            "samplers": {
-                "default": {},
-                "pixelated": {
-                    "MAG_FILTER": "GL_NEAREST"
-                }
-            },
-            "materials": {
-                "character": {
-                    "type": "textured",
-                    "shader": "textured",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "texture": "character",
-                    "sampler": "default"
-                },
-                "groundEarth": {
-                    "type": "textured",
-                    "shader": "textured",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "texture": "groundEarth",
-                    "sampler": "default"
-                },
-                "box": {
-                    "type": "textured",
-                    "shader": "textured",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "texture": "box",
-                    "sampler": "default"
-                },
-                "key": {
-                    "type": "textured",
-                    "shader": "textured",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "texture": "key",
-                    "sampler": "default"
-                },
-                "trap": {
-                    "type": "textured",
-                    "shader": "textured",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "texture": "trap",
-                    "sampler": "default"
-                }
+            "depthTesting": {
+              "enabled": true
             }
+          },
+          "tint": [1, 1, 1, 1],
+          "texture": "character",
+          "sampler": "default"
         },
-        "world": [
-            {
-                "position": [
-                    0,
-                    2,
-                    2
-                ],
-                "components": [
-                    {
-                        "type": "Camera"
-                    },
-                    {
-                        "type": "Free Camera Controller"
-                    }
-                ]
+        "groundEarth": {
+          "type": "textured",
+          "shader": "textured",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
             },
-            {
-                "position": [
-                    0,
-                    -1,
-                    0
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "character",
-                        "material": "character"
-                    },
-                    {
-                        "type": "Free Movement"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0,
-                    0
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0.3,
-                    0
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.3,
-                    0.3,
-                    0.3
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -1,
-                    -1,
-                    1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0,
-                    6
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0.3,
-                    6
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.3,
-                    0.3,
-                    0.3
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -1,
-                    -1,
-                    7
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -1,
-                    -1,
-                    7
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    6,
-                    0,
-                    6
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    6,
-                    0.3,
-                    6
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.3,
-                    0.3,
-                    0.3
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    5,
-                    -1,
-                    7
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    5,
-                    -1,
-                    7
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    6,
-                    0,
-                    12
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    6,
-                    0.3,
-                    12
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.3,
-                    0.3,
-                    0.3
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    5,
-                    -1,
-                    13
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    5,
-                    -1,
-                    13
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    5,
-                    -1,
-                    13
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    12,
-                    0,
-                    12
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    12,
-                    0.3,
-                    12
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.3,
-                    0.3,
-                    0.3
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    11,
-                    -1,
-                    13
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    12,
-                    0,
-                    18
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    12,
-                    -0.2,
-                    18
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.2,
-                    0.2,
-                    0.3
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "key",
-                        "material": "key"
-                    },
-                    {
-                        "type": "Movement",
-                        "angularVelocity": [
-                            0,
-                            45,
-                            0
-                        ]
-                    }
-                ]
-            },
-            {
-                "position": [
-                    11,
-                    -1,
-                    19
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    11,
-                    -1,
-                    19
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    }
-                ]
+            "depthTesting": {
+              "enabled": true
             }
+          },
+          "tint": [1, 1, 1, 1],
+          "texture": "groundEarth",
+          "sampler": "default"
+        },
+        "box": {
+          "type": "textured",
+          "shader": "textured",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
+            },
+            "depthTesting": {
+              "enabled": true
+            }
+          },
+          "tint": [1, 1, 1, 1],
+          "texture": "box",
+          "sampler": "default"
+        },
+        "key": {
+          "type": "textured",
+          "shader": "textured",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
+            },
+            "depthTesting": {
+              "enabled": true
+            }
+          },
+          "tint": [1, 1, 1, 1],
+          "texture": "key",
+          "sampler": "default"
+        },
+        "trap": {
+          "type": "textured",
+          "shader": "textured",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
+            },
+            "depthTesting": {
+              "enabled": true
+            }
+          },
+          "tint": [1, 1, 1, 1],
+          "texture": "trap",
+          "sampler": "default"
+        }
+      }
+    },
+    "world": [
+      {
+        "position": [0, 2, 2],
+        "components": [
+          {
+            "type": "Camera"
+          },
+          {
+            "type": "Free Camera Controller"
+          }
         ]
-    }
+      },
+      {
+        "position": [0, -1, 0],
+        "rotation": [0, 180, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "character",
+            "material": "character"
+          },
+          {
+            "type": "Free Movement"
+          }
+        ]
+      },
+      {
+        "position": [0, 0, 0],
+        "rotation": [0, 0, 0],
+        "scale": [8, 8, 8],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          }
+        ]
+      },
+      {
+        "position": [0, 0.3, 0],
+        "rotation": [0, 0, 0],
+        "scale": [0.3, 0.3, 0.3],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "box",
+            "material": "box"
+          }
+        ]
+      },
+      {
+        "position": [-1, -1, 1],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [0, 0, 6],
+        "rotation": [0, 0, 0],
+        "scale": [8, 8, 8],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          }
+        ]
+      },
+      {
+        "position": [0, 0.3, 6],
+        "rotation": [0, 0, 0],
+        "scale": [0.3, 0.3, 0.3],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "box",
+            "material": "box"
+          }
+        ]
+      },
+      {
+        "position": [-1, -1, 7],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [-1, -1, 7],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [6, 0, 6],
+        "rotation": [0, 0, 0],
+        "scale": [8, 8, 8],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          }
+        ]
+      },
+      {
+        "position": [6, 0.3, 6],
+        "rotation": [0, 0, 0],
+        "scale": [0.3, 0.3, 0.3],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "box",
+            "material": "box"
+          }
+        ]
+      },
+      {
+        "position": [5, -1, 7],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [5, -1, 7],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [6, 0, 12],
+        "rotation": [0, 0, 0],
+        "scale": [8, 8, 8],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          }
+        ]
+      },
+      {
+        "position": [6, 0.3, 12],
+        "rotation": [0, 0, 0],
+        "scale": [0.3, 0.3, 0.3],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "box",
+            "material": "box"
+          }
+        ]
+      },
+      {
+        "position": [5, -1, 13],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [5, -1, 13],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [5, -1, 13],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [12, 0, 12],
+        "rotation": [0, 0, 0],
+        "scale": [8, 8, 8],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          }
+        ]
+      },
+      {
+        "position": [12, 0.3, 12],
+        "rotation": [0, 0, 0],
+        "scale": [0.3, 0.3, 0.3],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "box",
+            "material": "box"
+          }
+        ]
+      },
+      {
+        "position": [11, -1, 13],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [12, 0, 18],
+        "rotation": [0, 0, 0],
+        "scale": [8, 8, 8],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          }
+        ]
+      },
+      {
+        "position": [12, -0.2, 18],
+        "rotation": [0, 0, 0],
+        "scale": [0.2, 0.2, 0.3],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "key",
+            "material": "key"
+          },
+          {
+            "type": "Movement",
+            "angularVelocity": [0, 45, 0]
+          }
+        ]
+      },
+      {
+        "position": [11, -1, 19],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      },
+      {
+        "position": [11, -1, 19],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          }
+        ]
+      }
+    ]
+  }
 }

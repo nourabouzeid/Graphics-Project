@@ -9,9 +9,7 @@
 
 #include <functional>
 #include <array>
-#include <windows.h>
-#include <playsoundapi.h>
-#include <systems/sound.hpp>
+
 
 // This struct is used to store the location and size of a button and the code it should execute when clicked
 struct Button
@@ -54,12 +52,12 @@ class Menustate : public our::State
 
     // An array of the button that we can interact with
     std::array<Button, 2> buttons;
-    Sound gameSound = Sound("D:/32term/graphics/project/phase1/Graphics-Project/assets/sounds/game.mp3", false);
+    // Sound gameSound = Sound("D:/32term/graphics/project/phase1/Graphics-Project/assets/sounds/game.mp3", false);
     void onInitialize() override
 
     {
 
-        gameSound.play(1);
+        // gameSound.play(1);
         // First, we create a material for the menu's background
         menuMaterial = new our::TexturedMaterial();
         // Here, we load the shader that will be used to draw the background
@@ -219,6 +217,6 @@ class Menustate : public our::State
         delete menuMaterial;
         delete highlightMaterial->shader;
         delete highlightMaterial;
-        gameSound.stop();
+        // gameSound.stop();
     }
 };

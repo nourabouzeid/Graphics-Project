@@ -2,7 +2,7 @@
 #include "../ecs/entity.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> 
-
+#include "../components/free-movement.hpp"
 namespace our {
     // Reads camera parameters from the given json object
     void CameraComponent::deserialize(const nlohmann::json& data) {
@@ -21,7 +21,7 @@ namespace our {
     }
 
     // Creates and returns the camera view matrix
-    glm::mat4 CameraComponent::getViewMatrix() const {
+    glm::mat4 CameraComponent::getViewMatrix(World* world)const {
         auto owner = getOwner();
         auto M = owner->getLocalToWorldMatrix();
         //TODO: (Req 8) Complete this function
@@ -41,9 +41,16 @@ namespace our {
             centerCamera = glm::vec4(0, 0, -1, 1),
             upCamera = glm::vec4(0, 1, 0, 0);
 
+        FreeMovementComponent* gameCharacter = nullptr;     
+
+        for (auto entity : world->getEntities()) {
+            gameCharacter = entity->getComponent<FreeMovementComponent>();
+            if (gameCharacter) break;
+        }
+
         const glm::vec3
             eyeWorld = M * eyeCamera,
-            centerWorld = glm::vec3(0 , 0 , 0),
+            centerWorld = gameCharacter->getOwner()->localTransform.position ,
             upWorld = glm::normalize(glm::vec3(M * upCamera));
 
         glm::mat4 viewMatrix = glm::lookAt(eyeWorld, centerWorld, upWorld);

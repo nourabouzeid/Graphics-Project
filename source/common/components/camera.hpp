@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../ecs/component.hpp"
+#include "ecs/component.hpp" 
+#include "../ecs/world.hpp"
 
 #include <glm/mat4x4.hpp>
 
@@ -28,7 +29,7 @@ namespace our {
         void deserialize(const nlohmann::json& data) override;
 
         // Creates and returns the camera view matrix
-        glm::mat4 getViewMatrix() const;
+        glm::mat4 getViewMatrix(World* world) const;
 
         // Creates and returns the camera projection matrix
         // "viewportSize" is used to compute the aspect ratio
