@@ -89,6 +89,9 @@ set(COMMON_SOURCES
         source/common/components/movement.hpp
         source/common/components/movement.cpp
         source/common/components/component-deserializer.hpp
+        source/common/components/collision.cpp
+        source/common/components/collision.hpp
+
 
         source/common/systems/forward-renderer.hpp
         source/common/systems/forward-renderer.cpp
@@ -100,6 +103,9 @@ set(COMMON_SOURCES
       
         source/common/systems/sound.hpp
         source/common/systems/sound.cpp
+        source/common/systems/collision-system.hpp
+
+      
 )
 
 # Define the directories in which to search for the included headers
@@ -130,6 +136,7 @@ set(STATES_SOURCES
         source/states/material-test-state.hpp
         source/states/entity-test-state.hpp
         source/states/renderer-test-state.hpp
+
 )
 
 # For each example, we add an executable target
