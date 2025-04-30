@@ -47,7 +47,7 @@ namespace our
             glm::vec3& position = entity->localTransform.position;
 
             glm::vec3& characterPos = character->getOwner()->localTransform.position;
-            glm::vec3 movementDirection = glm::normalize(-position);
+            glm::vec3 movementDirection = glm::normalize(characterPos-position);
             float currPitch = glm::asin(glm::clamp(position.y / controller->radius, -1.0f, 1.0f));
             movementDirection.y *= sin(glm::radians(currPitch));
 
@@ -58,11 +58,22 @@ namespace our
                 up = glm::vec3(matrix * glm::vec4(0, 1, 0, 0)),
                 right = glm::vec3(matrix * glm::vec4(1, 0, 0, 0));
             glm::vec3 current_sensitivity = character->positionSensitivity;
-            if (app->getKeyboard().isPressed(GLFW_KEY_W)) characterPos += movementDirection * (deltaTime * current_sensitivity.z);
-            if (app->getKeyboard().isPressed(GLFW_KEY_S)) characterPos -= movementDirection * (deltaTime * current_sensitivity.z);
-            if (app->getKeyboard().isPressed(GLFW_KEY_D)) characterPos += glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
-            if (app->getKeyboard().isPressed(GLFW_KEY_A)) characterPos -= glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
-
+            if (app->getKeyboard().isPressed(GLFW_KEY_W)) {
+                characterPos += movementDirection * (deltaTime * current_sensitivity.z);
+                position += movementDirection * (deltaTime * current_sensitivity.z);
+            }
+            if (app->getKeyboard().isPressed(GLFW_KEY_S)) {
+                characterPos -= movementDirection * (deltaTime * current_sensitivity.z);
+                position -= movementDirection * (deltaTime * current_sensitivity.z);
+            }
+            if (app->getKeyboard().isPressed(GLFW_KEY_D)) {
+                characterPos += glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+                position += glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+            }
+            if (app->getKeyboard().isPressed(GLFW_KEY_A)) {
+                characterPos -= glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+                position -= glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+            }
         }
 
         // When the state exits, it should call this function to ensure the mouse is unlocked

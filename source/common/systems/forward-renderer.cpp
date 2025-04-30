@@ -185,7 +185,7 @@ namespace our
 
         glm::mat4 VP = camera->getProjectionMatrix(
             windowSize) *
-            camera->getViewMatrix();
+            camera->getViewMatrix(world);
         glm::vec3 cameraPos = camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(0, 0, 0, 1);
 
         // TODO: (Req 9) Set the OpenGL viewport using viewportStart and viewportSize

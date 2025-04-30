@@ -22,5 +22,5 @@ namespace our {
         // Reads sensitivities & speedupFactor from the given json object
         void deserialize(const nlohmann::json& data) override;
     };
-
+    
 }
