@@ -27,16 +27,16 @@
             "textures": {
                 "character": "assets/textures/colormap.png",
                 "groundEarth": "assets/textures/ground_new6.jpg",
-                "box": "assets/textures/1335133419679.png",
+                "box": "assets/textures/box2.jpg",
                 "key": "assets/textures/gold.png",
-                "trap": "assets/textures/trap.png"
+                "trap": "assets/textures/trap2.jpg"
             },
             "meshes": {
                 "character": "assets/models/character-male-a.obj",
                 "groundEarth": "assets/models/ground_new6.obj",
-                "box": "assets/models/box.obj",
-                "key": "assets/models/key.obj",
-                "trap": "assets/models/trap.obj"
+                "box": "assets/models/box2.obj",
+                "key": "assets/models/key2.obj",
+                "trap": "assets/models/trap2.obj"
             },
             "samplers": {
                 "default": {},
@@ -151,8 +151,8 @@
             {
                 "position": [
                     0,
-                    2,
-                    2
+                    5,
+                    5
                 ],
                 "scale": [
                     1,
@@ -171,7 +171,7 @@
             {
                 "position": [
                     0,
-                    0.8,
+                    0.7,
                     0
                 ],
                 "rotation": [
@@ -196,10 +196,11 @@
                     {
                         "type": "Collision",
                         "size": [
-                            0.1,
-                            0.1
+                            1,
+                            1,
+                            0.5
                         ],
-                        "anchor": "top_left"
+                        "anchor": "bottom _center"
                     }
                 ]
             },
@@ -211,7 +212,7 @@
                 ],
                 "rotation": [
                     0,
-                    0,
+                    -12,
                     0
                 ],
                 "scale": [
@@ -225,37 +226,13 @@
                         "type": "Mesh Renderer",
                         "mesh": "groundEarth",
                         "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    3,
-                    0
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.5,
-                    0.5,
-                    0.5
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
                     },
                     {
                         "type": "Collision",
                         "size": [
-                            1.0,
-                            1.0
+                            6,
+                            4,
+                            6.5
                         ],
                         "anchor": "center"
                     }
@@ -263,687 +240,9 @@
             },
             {
                 "position": [
-                    -1,
-                    0.3,
-                    1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -1,
-                    0.3,
-                    1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -1,
-                    0.3,
-                    1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    3,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.5,
-                    0.5,
-                    0.5
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.0,
-                            1.0
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -1,
-                    0.3,
-                    9
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    8,
-                    0,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    8,
-                    3,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.5,
-                    0.5,
-                    0.5
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.0,
-                            1.0
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    7,
-                    0.3,
-                    9
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    7,
-                    0.3,
-                    9
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    8,
-                    0,
-                    16
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    8,
-                    3,
-                    16
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.5,
-                    0.5,
-                    0.5
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.0,
-                            1.0
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    7,
-                    0.3,
-                    17
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    7,
-                    0.3,
-                    17
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0,
-                    16
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    3,
-                    16
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.5,
-                    0.5,
-                    0.5
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.0,
-                            1.0
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -1,
-                    0.3,
-                    17
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0,
-                    24
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    3,
-                    24
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.5,
-                    0.5,
-                    0.5
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.0,
-                            1.0
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -1,
-                    0.3,
-                    25
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    8,
-                    0,
-                    24
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    8,
-                    3,
-                    24
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    0.5,
-                    0.5,
-                    0.5
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.0,
-                            1.0
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    8,
                     2,
-                    24
+                    1.1,
+                    8
                 ],
                 "rotation": [
                     0,
@@ -951,9 +250,519 @@
                     0
                 ],
                 "scale": [
-                    0.2,
-                    0.2,
-                    0.3
+                    1,
+                    1,
+                    1
+                ],
+                "name": "box",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "box",
+                        "material": "box"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            1.1,
+                            1.1,
+                            1.1
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0.4,
+                    0.8,
+                    1.1
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "trap",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            0.7,
+                            0.2,
+                            0.7
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -8,
+                    0,
+                    0
+                ],
+                "rotation": [
+                    0,
+                    -12,
+                    0
+                ],
+                "scale": [
+                    8,
+                    8,
+                    8
+                ],
+                "name": "groundEarth",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "groundEarth",
+                        "material": "groundEarth"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            6,
+                            4,
+                            6.5
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -6,
+                    1.1,
+                    8
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "box",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "box",
+                        "material": "box"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            1.1,
+                            1.1,
+                            1.1
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -7.6,
+                    0.8,
+                    1.1
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "trap",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            0.7,
+                            0.2,
+                            0.7
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -7.6,
+                    0.8,
+                    1.1
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "trap",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            0.7,
+                            0.2,
+                            0.7
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -8,
+                    0,
+                    8
+                ],
+                "rotation": [
+                    0,
+                    -12,
+                    0
+                ],
+                "scale": [
+                    8,
+                    8,
+                    8
+                ],
+                "name": "groundEarth",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "groundEarth",
+                        "material": "groundEarth"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            6,
+                            4,
+                            6.5
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -6,
+                    1.1,
+                    16
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "box",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "box",
+                        "material": "box"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            1.1,
+                            1.1,
+                            1.1
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -7.6,
+                    0.8,
+                    9.1
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "trap",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            0.7,
+                            0.2,
+                            0.7
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -7.6,
+                    0.8,
+                    9.1
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "trap",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            0.7,
+                            0.2,
+                            0.7
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -7.6,
+                    0.8,
+                    9.1
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "trap",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            0.7,
+                            0.2,
+                            0.7
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    0,
+                    8
+                ],
+                "rotation": [
+                    0,
+                    -12,
+                    0
+                ],
+                "scale": [
+                    8,
+                    8,
+                    8
+                ],
+                "name": "groundEarth",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "groundEarth",
+                        "material": "groundEarth"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            6,
+                            4,
+                            6.5
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    2,
+                    1.1,
+                    16
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "box",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "box",
+                        "material": "box"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            1.1,
+                            1.1,
+                            1.1
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0.4,
+                    0.8,
+                    9.1
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "name": "trap",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "trap",
+                        "material": "trap"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            0.7,
+                            0.2,
+                            0.7
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    0,
+                    16
+                ],
+                "rotation": [
+                    0,
+                    -12,
+                    0
+                ],
+                "scale": [
+                    8,
+                    8,
+                    8
+                ],
+                "name": "groundEarth",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "groundEarth",
+                        "material": "groundEarth"
+                    },
+                    {
+                        "type": "Collision",
+                        "size": [
+                            6,
+                            4,
+                            6.5
+                        ],
+                        "anchor": "center"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    1.5,
+                    16
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
                 ],
                 "name": "key",
                 "components": [
@@ -974,108 +783,10 @@
                         "type": "Collision",
                         "size": [
                             1.0,
+                            1.0,
                             1.0
                         ],
                         "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    7,
-                    0.3,
-                    25
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    7,
-                    0.3,
-                    25
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    7,
-                    0.3,
-                    25
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.6,
-                            0.6
-                        ],
-                        "anchor": "top_left"
                     }
                 ]
             }

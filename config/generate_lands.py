@@ -38,14 +38,14 @@ def island_position_from_path(path):
             # if i > 2 and path[i - 3] == 'left':
             #     current = (current[0] - 4 - width, current[1], current[2])
             # else:
-            current = (current[0] - 2 - height, current[1], current[2])
+            current = (current[0] - 2 - height, 0, current[2])
         elif path[i] == 'left':
             # if i > 2 and path[i - 3] == 'right':
             #     current = (current[0] + 4 + width, current[1], current[2])
             # else:
-            current = (current[0] + 2 + height, current[1], current[2])
+            current = (current[0] + 2 + height, 0, current[2])
         else:
-            current = (current[0], current[1], current[2] + 2 + height)
+            current = (current[0],0, current[2] + 2 + height)
 
         positions.append(current)
 
@@ -69,7 +69,7 @@ def generate_traps_for_island(base_pos):
             1,
             random.uniform(.1,  .4)
         )
-        pos = [base_pos[0]-1 , base_pos[1]+0.5, base_pos[2] +1]
+        pos = [base_pos[0]+0.4 , 0.8, base_pos[2]+1.1]
         vx, vy, vz = random_trap_velocity()
         trap = {
             "position": round_vector(pos),
@@ -84,8 +84,8 @@ def generate_traps_for_island(base_pos):
                 },
 {
       "type": "Collision",
-      "size": [0.6, 0.6],
-      "anchor": "top_left"
+      "size": [.7, 0.2,.7],
+      "anchor": "center"
     }  
 
                
@@ -103,8 +103,8 @@ def generate_scene():
 
     # Camera
     world.append({
-        "position": [0, 2, 2],
-        "scale": [1, 1, 1],
+        "position": [0, 5, 5],
+        "scale": [1, 1, 1], 
         "components": [
             {"type": "Camera"},
             {"type": "Free Camera Controller"}
@@ -113,7 +113,7 @@ def generate_scene():
 
     # Character
     world.append({
-        "position": round_vector([0, .8, 0]),
+        "position": round_vector([0, .7, 0]),
         "rotation": [0, 180, 0],
         "scale": [1.3, 1.3, 1.3],
         "components": [
@@ -127,8 +127,8 @@ def generate_scene():
             },
                {
       "type": "Collision",
-      "size": [0.1, 0.1],
-      "anchor": "top_left"
+      "size": [1, 1,0.5],
+      "anchor": "bottom _center"
     }
 
 
@@ -140,29 +140,35 @@ def generate_scene():
        
         # Ground
         world.append({
-            "position": round_vector(pos),
-            "rotation": [0, 0, 0],
+            "position": [pos[0], 0, pos[2]],
+            "rotation": [0, -12, 0],
             "scale": [8, 8, 8],
             "name":"groundEarth",
             "components": [
                 {
                     "type": "Mesh Renderer",
+
                     "mesh": "groundEarth",
                     "material": "groundEarth"
                 },
+{
+                    "type": "Collision",
+      "size": [6 ,4,6.5],
+      "anchor": "center"
+}
                 
 
       
             ]
         })
 
-        if i < len(positions):
-            # Box
-            box_pos = [pos[0] ,pos[1]+ 3, pos[2]]
+        if i < len(positions)-1:
+            # Box8
+            box_pos = [pos[0]+2 ,pos[1]+1.1, pos[2]]
             world.append({
                 "position": round_vector(box_pos),
                 "rotation": [0, 0, 0],
-                "scale": [0.5, 0.5, 0.5],
+                "scale": [1, 1, 1],
                 "name":"box",   
                 "components": [
                     {
@@ -171,20 +177,20 @@ def generate_scene():
                         "material": "box"
                     }
                 ,  {
-      "type": "Collision",
-      "size": [1.0, 1.0],
-      "anchor": "center"
-    }
+                    "type": "Collision",
+                    "size": [1.1, 1.1,1.1],
+                    "anchor": "center"
+                    }
 
                 ]
             })
-        if i == len(positions) - 1:
-            # Key
-            key_pos = [pos[0], pos[1]+2, pos[2]]
+            traps = generate_traps_for_island(pos)
+            world.extend(traps)
+        else:
             world.append({
-                "position": round_vector(key_pos),
+                "position": [pos[0], 1.5, pos[2]],
                 "rotation": [0, 0, 0],
-                "scale": [0.2, 0.2, 0.3],
+                "scale": [1, 1, 1],
                 "name":"key",
                 "components": [
                     {
@@ -197,18 +203,14 @@ def generate_scene():
                         "angularVelocity": [0, 45, 0]
                     }
                     , 
- {
-      "type": "Collision",
-      "size": [1.0, 1.0],
-      "anchor": "center"
-    }
+                    {
+                    "type": "Collision",
+                    "size": [1.0, 1.0,1.0],
+                    "anchor": "center"
+                    }
 
                 ]
             })
-
-        # Traps
-        traps = generate_traps_for_island(pos)
-        world.extend(traps)
 
     return {
         "start-scene": "play",
@@ -236,16 +238,16 @@ def generate_scene():
             "textures": {
                 "character": "assets/textures/colormap.png",
                 "groundEarth": "assets/textures/ground_new6.jpg",
-                "box": "assets/textures/1335133419679.png",
+                "box": "assets/textures/box2.jpg",
                 "key": "assets/textures/gold.png",
-                "trap": "assets/textures/trap.png"
+                "trap": "assets/textures/trap2.jpg"
             },
             "meshes": {
                 "character": "assets/models/character-male-a.obj",
                 "groundEarth": "assets/models/ground_new6.obj",
-                "box": "assets/models/box.obj",
-                "key": "assets/models/key.obj",
-                "trap": "assets/models/trap.obj"
+                "box": "assets/models/box2.obj",
+                "key": "assets/models/key2.obj",
+                "trap": "assets/models/trap2.obj"
             },
             "samplers": {
                 "default": {},

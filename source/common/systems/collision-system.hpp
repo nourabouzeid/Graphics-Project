@@ -26,9 +26,72 @@ namespace our
                     handleCollision(player, entity);
                 }
             }
+            cleanupBoxStates(world);
+
+            handleBoxLandCollision(world);
         }
 
     private:
+        std::unordered_map<Entity *, bool> boxLanded;
+
+        void handleBoxLandCollision(World *world)
+        {
+            std::vector<Entity *> boxes;
+            std::vector<Entity *> grounds;
+
+            // Gather all boxes and grounds
+            for (auto entity : world->getEntities())
+            {
+                if (entity->name == "box")
+                {
+                    boxes.push_back(entity);
+                }
+                else if (entity->name == "groundEarth")
+                {
+                    grounds.push_back(entity);
+                }
+            }
+
+            // For each box
+            for (auto box : boxes)
+            {
+                bool intersectsGround = false;
+
+                // Check if box intersects with any ground
+                for (auto ground : grounds)
+                {
+                    if (checkCollision(box, ground))
+                    {
+                        intersectsGround = true;
+                        break;
+                    }
+                }
+
+                // If not intersecting and hasn't already dropped
+                if (!intersectsGround && !boxLanded[box])
+                {
+                    std::cout << "Box is floating — applying gravity effect once!\n";
+                    // box->localTransform.position.y -= 1.0f; // Decrease Y once
+                    // boxLanded[box] = true;
+                }
+            }
+        }
+
+        void cleanupBoxStates(World *world)
+        {
+            for (auto it = boxLanded.begin(); it != boxLanded.end();)
+            {
+                if (std::find(world->getEntities().begin(), world->getEntities().end(), it->first) == world->getEntities().end())
+                {
+                    it = boxLanded.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
+            }
+        }
+
         Entity *findPlayer(World *world)
         {
             for (auto entity : world->getEntities())
@@ -41,52 +104,62 @@ namespace our
             return nullptr;
         }
 
-        bool checkCollision(Entity *a, Entity *b)
+        bool checkCollision(Entity *player, Entity *entity)
         {
-            auto aCollider = a->getComponent<CollisionComponent>();
-            auto bCollider = b->getComponent<CollisionComponent>();
+            auto aCollider = player->getComponent<CollisionComponent>();
+            auto bCollider = entity->getComponent<CollisionComponent>();
             if (!aCollider || !bCollider)
                 return false;
 
-            auto [aMin, aMax] = calculateBounds(a);
-            auto [bMin, bMax] = calculateBounds(b);
+            auto [playerMin, playerMax] = calculateBounds(player);
+            auto [entityMin, entityMax] = calculateBounds(entity);
 
-            // Check collision in XZ plane (ignoring Y axis)
-            return aMax.x > bMin.x && aMin.x < bMax.x &&
-                   aMax.z > bMin.z && aMin.z < bMax.z;
+            return playerMax.x > entityMin.x && playerMin.x < entityMax.x &&
+                   playerMax.y > entityMin.y && playerMin.y < entityMax.y &&
+                   playerMax.z > entityMin.z && playerMin.z < entityMax.z;
         }
 
         std::pair<glm::vec3, glm::vec3> calculateBounds(Entity *entity)
         {
             auto collider = entity->getComponent<CollisionComponent>();
-            glm::vec3 position = getWorldPosition(entity);
-            glm::vec3 size = {collider->size.x, 0.0f, collider->size.y}; // Using x/z for 2D plane
+            glm::vec3 pos = getWorldPosition(entity);
+            glm::vec3 size = collider->size;
+
+            glm::vec3 minBound, maxBound;
 
             switch (collider->anchor)
             {
             case CollisionComponent::Anchor::CENTER:
-                return {
-                    position - size / 2.0f,
-                    position + size / 2.0f};
+                minBound = pos - size * 0.5f;
+                maxBound = pos + size * 0.5f;
+                break;
+            case CollisionComponent::Anchor::BOTTOM_CENTER:
+                minBound = pos - glm::vec3(size.x * 0.5f, 0, size.z * 0.5f);
+                maxBound = pos + glm::vec3(size.x * 0.5f, size.y, size.z * 0.5f);
+                break;
             case CollisionComponent::Anchor::BOTTOM_LEFT:
-                return {
-                    position,
-                    position + size};
+                minBound = pos;
+                maxBound = pos + size;
+                break;
             case CollisionComponent::Anchor::BOTTOM_RIGHT:
-                return {
-                    {position.x - size.x, position.y, position.z},
-                    {position.x, position.y, position.z + size.z}};
+                minBound = pos - glm::vec3(size.x, 0, 0);
+                maxBound = pos + glm::vec3(0, size.y, size.z);
+                break;
             case CollisionComponent::Anchor::TOP_LEFT:
-                return {
-                    {position.x, position.y, position.z - size.z},
-                    {position.x + size.x, position.y, position.z}};
+                minBound = pos - glm::vec3(0, 0, size.z);
+                maxBound = pos + glm::vec3(size.x, size.y, 0);
+                break;
             case CollisionComponent::Anchor::TOP_RIGHT:
-                return {
-                    position - size,
-                    position};
+                minBound = pos - glm::vec3(size.x, size.y, size.z);
+                maxBound = pos;
+                break;
             default:
-                return {position, position};
+                minBound = pos - size * 0.5f;
+                maxBound = pos + size * 0.5f;
+                break;
             }
+
+            return {minBound, maxBound};
         }
 
         glm::vec3 getWorldPosition(Entity *entity)
@@ -96,26 +169,26 @@ namespace our
             {
                 pos += entity->parent->localTransform.position;
             }
-            return pos; // Return full 3D position
+            return pos;
         }
 
         void handleCollision(Entity *player, Entity *other)
         {
-            auto [min, max] = calculateBounds(other);
-            glm::vec3 center = (min + max) / 2.0f;
-
-            std::cout << "XZ Plane collision with " << other->name
-                      << " at (" << center.x << ", " << center.z << ")"
-                      << " - Bounds X:(" << min.x << "," << max.x << ")"
-                      << " Z:(" << min.z << "," << max.z << ")" << std::endl;
 
             if (other->name == "box")
             {
-                // Push logic in XZ plane
+
+                std::cout << "Player collided with box!" << std::endl;
             }
             else if (other->name == "trap")
             {
-                // Trap activation in XZ plane
+                // Trap logic here
+                std::cout << "Player collided with trap!" << std::endl;
+            }
+            else if (other->name == "groundEarth")
+            {
+                // Enemy logic here
+                std::cout << "Player collided with groundEarth!" << std::endl;
             }
         }
     };

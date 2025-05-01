@@ -22,6 +22,11 @@ namespace our
             anchor = Anchor::TOP_LEFT;
         else if (anchorStr == "top_right")
             anchor = Anchor::TOP_RIGHT;
+        else if (anchorStr == "bottom_center")
+            anchor = Anchor::BOTTOM_CENTER;
+       
+           
+     
         else
             anchor = Anchor::CENTER;
     }

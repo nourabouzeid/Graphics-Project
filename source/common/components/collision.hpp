@@ -15,10 +15,11 @@ namespace our
             BOTTOM_LEFT,
             BOTTOM_RIGHT,
             TOP_LEFT,
-            TOP_RIGHT
+            TOP_RIGHT,
+            BOTTOM_CENTER,
         };
 
-        glm::vec2 size = {1.0f, 1.0f};  // Full width and height
+        glm::vec3 size = {1.0f, 1.0f,1.0f};  // Full width and height
         Anchor anchor = Anchor::CENTER; // Where the position is anchored
 
         static std::string getID() { return "Collision"; }
