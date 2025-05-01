@@ -260,8 +260,17 @@ int our::Application::run(int run_for_frames)
     double last_frame_time = glfwGetTime();
     int current_frame = 0;
 
+    bool stateChangePending = false;
+
     //Game loop
     while (!glfwWindowShouldClose(window)) {
+        if (stateChangePending) {
+            // Reset state change flag to process the next frame
+            stateChangePending = false;
+            currentState = nextState;
+            nextState = nullptr;
+            currentState->onInitialize();  // Re-initialize in the next frame
+        }
         if (run_for_frames != 0 && current_frame >= run_for_frames) break;
         glfwPollEvents(); // Read all the user events and call relevant callbacks.
 
@@ -343,14 +352,22 @@ int our::Application::run(int run_for_frames)
         mouse.update();
 
         // If a scene change was requested, apply it
-        while (nextState) {
-            // If a scene was already running, destroy it (not delete since we can go back to it later)
-            if (currentState) currentState->onDestroy();
-            // Switch scenes
-            currentState = nextState;
-            nextState = nullptr;
-            // Initialize the new scene
-            currentState->onInitialize();
+        // while (nextState) {
+        //     std::cout<< "switching \n";
+        //     // If a scene was already running, destroy it (not delete since we can go back to it later)
+        //     if (currentState) currentState->onDestroy();
+        //     // Switch scenes
+        //     currentState = nextState;
+        //     nextState = nullptr;
+        //     // Initialize the new scene
+        //     currentState->onInitialize();
+        // }
+
+        // In the game loop:
+        if (nextState) {
+            std::cout << "switching \n";
+            stateChangePending = true;
+            nextState->onInitialize();  // Try to initialize the next state
         }
 
         ++current_frame;

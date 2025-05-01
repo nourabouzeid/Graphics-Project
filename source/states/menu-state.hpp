@@ -54,9 +54,7 @@ class Menustate : public our::State
     std::array<Button, 2> buttons;
     // Sound gameSound = Sound("D:/32term/graphics/project/phase1/Graphics-Project/assets/sounds/game.mp3", false);
     void onInitialize() override
-
     {
-
         // gameSound.play(1);
         // First, we create a material for the menu's background
         menuMaterial = new our::TexturedMaterial();
