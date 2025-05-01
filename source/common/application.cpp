@@ -365,7 +365,6 @@ int our::Application::run(int run_for_frames)
 
         // In the game loop:
         if (nextState) {
-            std::cout << "switching \n";
             stateChangePending = true;
             nextState->onInitialize();  // Try to initialize the next state
         }
