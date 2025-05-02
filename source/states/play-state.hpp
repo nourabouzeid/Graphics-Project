@@ -8,6 +8,7 @@
 #include <systems/free-movement.hpp>
 #include <systems/movement.hpp>
 #include <asset-loader.hpp>
+#include <systems/collision-system.hpp>
 
 #include <iomanip>
 #include <sstream>
@@ -21,7 +22,9 @@ class Playstate : public our::State {
     our::ForwardRenderer renderer;
     our::FreeCameraControllerSystem cameraController;
     our::MovementSystem movementSystem;
+
     our::FreeMovementSystem freeMovement;
+    our::CollisionSystem collisionSystem;
 
     // Timer variables
     float countdownTime = GAME_COUNTER_TIME;  
@@ -92,8 +95,9 @@ class Playstate : public our::State {
         movementSystem.update(&world, (float)deltaTime);
         cameraController.update(&world, (float)deltaTime);
         freeMovement.update(&world, (float)deltaTime);
-        // And finally we use the renderer system to draw the scene
-        renderer.render(&world);
+        collisionSystem.update(&world, (float)deltaTime);
+            // And finally we use the renderer system to draw the scene
+            renderer.render(&world);
 
         // Get a reference to the keyboard object
         auto& keyboard = getApp()->getKeyboard();
@@ -142,6 +146,8 @@ class Playstate : public our::State {
         freeMovement.exit();
         // Clear the world
         world.clear();
+       
+
         // and we delete all the loaded assets to free memory on the RAM and the VRAM
         our::clearAllAssets();
     }
