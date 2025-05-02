@@ -9,6 +9,11 @@
 #include <systems/movement.hpp>
 #include <asset-loader.hpp>
 
+#include <iomanip>
+#include <sstream>
+
+#define GAME_COUNTER_TIME 60.0f
+
 // This state shows how to use the ECS framework and deserialization.
 class Playstate : public our::State {
 
@@ -18,8 +23,39 @@ class Playstate : public our::State {
     our::MovementSystem movementSystem;
     our::FreeMovementSystem freeMovement;
 
+    // Timer variables
+    float countdownTime = GAME_COUNTER_TIME;  
+    bool isGameOver = false;
+    our::TexturedMaterial* heartMaterial = nullptr;
+    our::Mesh* quadMesh = nullptr;
+    int lives = 3;
+
     void onInitialize() override {
-        // First of all, we get the scene configuration from the app config
+        heartMaterial = new our::TexturedMaterial();
+        heartMaterial->shader = new our::ShaderProgram();
+        heartMaterial->shader->attach("assets/shaders/textured.vert", GL_VERTEX_SHADER);
+        heartMaterial->shader->attach("assets/shaders/textured.frag", GL_FRAGMENT_SHADER);
+        heartMaterial->shader->link();
+        heartMaterial->texture = our::texture_utils::loadImage("assets/textures/heart.png");
+        heartMaterial->sampler = new our::Sampler();
+        heartMaterial->sampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        heartMaterial->sampler->set(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        heartMaterial->tint = glm::vec4(1, 1, 1, 1); 
+
+        heartMaterial->pipelineState.blending.enabled = true;
+        heartMaterial->pipelineState.blending.sourceFactor = GL_SRC_ALPHA;
+        heartMaterial->pipelineState.blending.destinationFactor = GL_ONE_MINUS_SRC_ALPHA;
+
+
+        quadMesh = new our::Mesh({
+            {{0, 0, 0}, {255,255,255,255}, {0, 1}, {0,0,1}},
+            {{1, 0, 0}, {255,255,255,255}, {1, 1}, {0,0,1}},
+            {{1, 1, 0}, {255,255,255,255}, {1, 0}, {0,0,1}},
+            {{0, 1, 0}, {255,255,255,255}, {0, 0}, {0,0,1}},
+        }, {0, 1, 2, 2, 3, 0});
+
+
+        // We get the scene configuration from the app config
         auto& config = getApp()->getConfig()["scene"];
         // If we have assets in the scene config, we deserialize them
         if (config.contains("assets")) {
@@ -35,9 +71,23 @@ class Playstate : public our::State {
         // Then we initialize the renderer
         auto size = getApp()->getFrameBufferSize();
         renderer.initialize(size, config["renderer"]);
+
+        countdownTime = GAME_COUNTER_TIME;
+        lives = 3;  
+        isGameOver = false;
     }
 
     void onDraw(double deltaTime) override {
+        if (isGameOver) return;
+
+        // Update the countdown timer
+        countdownTime -= (float)deltaTime;
+        if (countdownTime <= 0) {
+            countdownTime = GAME_COUNTER_TIME;
+            isGameOver = true;
+            getApp()->changeState("game-over");
+        }
+
         // Here, we just run a bunch of systems to control the world logic
         movementSystem.update(&world, (float)deltaTime);
         cameraController.update(&world, (float)deltaTime);
@@ -52,6 +102,36 @@ class Playstate : public our::State {
             // If the escape  key is pressed in this frame, go to the play state
             getApp()->changeState("menu");
         }
+
+        // Display the countdown timer at the top-right of the screen
+        // glm::ivec2 size = getApp()->getFrameBufferSize();
+        // glm::mat4 projection = glm::ortho(0.0f, (float)size.x, (float)size.y, 0.0f, 1.0f, -1.0f);
+        // glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(size.x - 150, 20.0f, 0.0f)); // Top-right position
+
+        // Create timer text
+        // std::stringstream timerText;
+        // timerText << std::fixed << std::setprecision(2) << countdownTime;
+        // std::string timeString = timerText.str();
+
+        // renderText(timeString, projection * modelMatrix);  // Replace with your actual text rendering method
+
+        glm::ivec2 screenSize = getApp()->getFrameBufferSize();
+        glm::mat4 VP = glm::ortho(0.0f, (float)screenSize.x, (float)screenSize.y, 0.0f, 1.0f, -1.0f);
+
+        float heartSize = 50.0f;
+        float spacing = 10.0f;
+
+        for(int i = 0; i < lives; ++i) {
+            float x = spacing + i * (heartSize + spacing);
+            float y = spacing;
+        
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0)) *
+                              glm::scale(glm::mat4(1.0f), glm::vec3(heartSize, heartSize, 1.0f));
+
+            heartMaterial->setup();
+            heartMaterial->shader->set("transform", VP * model);
+            quadMesh->draw();
+        }
     }
 
     void onDestroy() override {
@@ -64,5 +144,20 @@ class Playstate : public our::State {
         world.clear();
         // and we delete all the loaded assets to free memory on the RAM and the VRAM
         our::clearAllAssets();
+    }
+
+    void renderText(const std::string& text, const glm::mat4& transform) {
+        // This is a placeholder method for rendering text
+        // Implement a text rendering method to display the timer on screen
+        // You can use libraries like FreeType for text rendering or create a custom font renderer
+    }
+
+    public:
+    void decrementLife() {
+        lives--;
+        if (lives <= 0) {
+            isGameOver = true;
+            getApp()->changeState("game-over");
+        }
     }
 };

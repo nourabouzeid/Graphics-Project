@@ -351,19 +351,6 @@ int our::Application::run(int run_for_frames)
         keyboard.update();
         mouse.update();
 
-        // If a scene change was requested, apply it
-        // while (nextState) {
-        //     std::cout<< "switching \n";
-        //     // If a scene was already running, destroy it (not delete since we can go back to it later)
-        //     if (currentState) currentState->onDestroy();
-        //     // Switch scenes
-        //     currentState = nextState;
-        //     nextState = nullptr;
-        //     // Initialize the new scene
-        //     currentState->onInitialize();
-        // }
-
-        // In the game loop:
         if (nextState) {
             stateChangePending = true;
             nextState->onInitialize();  // Try to initialize the next state
