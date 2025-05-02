@@ -8,11 +8,16 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
+class Playstate;
+
 namespace our
 {
     class CollisionSystem
     {
     public:
+        // Playstate* playState;
+        std::function<void()> onHitTrap;
+
         void update(World *world, float deltaTime)
         {
             Entity *player = findPlayer(world);
@@ -182,7 +187,7 @@ namespace our
             }
             else if (other->name == "trap")
             {
-                // Trap logic here
+                onHitTrap();
                 std::cout << "Player collided with trap!" << std::endl;
             }
             else if (other->name == "groundEarth")

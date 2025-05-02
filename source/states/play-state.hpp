@@ -78,6 +78,10 @@ class Playstate : public our::State {
         countdownTime = GAME_COUNTER_TIME;
         lives = 3;  
         isGameOver = false;
+
+        collisionSystem.onHitTrap = [this]() {
+            this->decrementLife();
+        };
     }
 
     void onDraw(double deltaTime) override {
@@ -122,15 +126,16 @@ class Playstate : public our::State {
         glm::ivec2 screenSize = getApp()->getFrameBufferSize();
         glm::mat4 VP = glm::ortho(0.0f, (float)screenSize.x, (float)screenSize.y, 0.0f, 1.0f, -1.0f);
 
-        float heartSize = 50.0f;
-        float spacing = 10.0f;
+        float heartHeight = 50.0f;
+        float heartWidth = 60.0f;
+        float spacing = 25.0f;
 
         for(int i = 0; i < lives; ++i) {
-            float x = spacing + i * (heartSize + spacing);
+            float x = spacing + i * (heartHeight + spacing);
             float y = spacing;
         
             glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0)) *
-                              glm::scale(glm::mat4(1.0f), glm::vec3(heartSize, heartSize, 1.0f));
+                              glm::scale(glm::mat4(1.0f), glm::vec3(heartWidth, heartHeight, 1.0f));
 
             heartMaterial->setup();
             heartMaterial->shader->set("transform", VP * model);
@@ -147,7 +152,6 @@ class Playstate : public our::State {
         // Clear the world
         world.clear();
        
-
         // and we delete all the loaded assets to free memory on the RAM and the VRAM
         our::clearAllAssets();
     }
