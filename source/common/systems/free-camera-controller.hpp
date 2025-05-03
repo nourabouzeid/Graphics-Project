@@ -3,8 +3,10 @@
 #include "../ecs/world.hpp"
 #include "../components/camera.hpp"
 #include "../components/free-camera-controller.hpp"
+#include "../components/free-movement.hpp"
 
 #include "../application.hpp"
+#include "../ecs/world.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
@@ -41,6 +43,7 @@ namespace our
                 controller = entity->getComponent<FreeCameraControllerComponent>();
                 if (camera && controller) break;
             }
+
             // If there is no entity with both a CameraComponent and a FreeCameraControllerComponent, we can do nothing so we return
             if (!(camera && controller)) return;
             // Get the entity that we found via getOwner of camera (we could use controller->getOwner())
@@ -61,12 +64,22 @@ namespace our
             glm::vec3& position = entity->localTransform.position;
             glm::vec3& rotation = entity->localTransform.rotation;
 
+            FreeMovementComponent* gameCharacter = nullptr;     
+
+            for (auto entity : world->getEntities()) {
+                gameCharacter = entity->getComponent<FreeMovementComponent>();
+                if (gameCharacter) break;
+            }
+            glm:: vec3 gameCharacterPosition = gameCharacter->getOwner()->localTransform.position;
+
+            glm::vec3 cameraFront = position - gameCharacterPosition;
+
             // If the left mouse button is pressed, we get the change in the mouse location
             // and use it to update the camera rotation
             // Compute initial pitch and yaw safely
             if (currPitch == -1 || currYaw == -1) {
-                currPitch = atan2(position.y, glm::sqrt(position.x * position.x + position.z * position.z));
-                currYaw = atan2(position.z, position.x);
+                currPitch = atan2(cameraFront.y, glm::sqrt(cameraFront.x * cameraFront.x + cameraFront.z * cameraFront.z));
+                currYaw = atan2(cameraFront.z, cameraFront.x);
             }
 
             // Update angles based on mouse input
@@ -86,8 +99,8 @@ namespace our
             direction = glm::normalize(direction);
 
             // Update position based on radius
-            float radius = glm::length(position);
-            position = radius * direction;
+            float radius = glm::length(cameraFront);
+            position = radius * direction + gameCharacterPosition;
 
             // We prevent the pitch from exceeding a certain angle from the XZ plane to prevent gimbal locks
             if (rotation.x < -glm::half_pi<float>() * 0.99f) rotation.x = -glm::half_pi<float>() * 0.99f;

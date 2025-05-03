@@ -20,6 +20,7 @@ namespace our
     // For more information, see "common/components/free-camera-controller.hpp"
     class FreeMovementSystem {
         Application* app; // The application in which the state runs
+        float currPitch = -1;
 
     public:
         // When a state enters, it should call this function and give it the pointer to the application
@@ -44,11 +45,13 @@ namespace our
             if (!(controller && character)) return;
             // Get the entity that we found via getOwner of controller (we could use controller->getOwner())
             Entity* entity = controller->getOwner();
-            glm::vec3& position = entity->localTransform.position;
+            Entity* characterEntity = character->getOwner();
+            glm::vec3& cameraPosition = entity->localTransform.position;
 
-            glm::vec3& characterPos = character->getOwner()->localTransform.position;
-            glm::vec3 movementDirection = glm::normalize(-position);
-            float currPitch = glm::asin(glm::clamp(position.y / controller->radius, -1.0f, 1.0f));
+            glm::vec3& characterPos = characterEntity->localTransform.position;
+            glm::vec3 movementDirection = glm::normalize(characterPos-cameraPosition);
+            if (currPitch == -1)
+                currPitch = atan2(cameraPosition.y, glm::sqrt(cameraPosition.x * cameraPosition.x + cameraPosition.z * cameraPosition.z));
             movementDirection.y *= sin(glm::radians(currPitch));
 
             // We change the controller position based on the keys WASD/QE
@@ -58,10 +61,30 @@ namespace our
                 up = glm::vec3(matrix * glm::vec4(0, 1, 0, 0)),
                 right = glm::vec3(matrix * glm::vec4(1, 0, 0, 0));
             glm::vec3 current_sensitivity = character->positionSensitivity;
-            if (app->getKeyboard().isPressed(GLFW_KEY_W)) characterPos += movementDirection * (deltaTime * current_sensitivity.z);
-            if (app->getKeyboard().isPressed(GLFW_KEY_S)) characterPos -= movementDirection * (deltaTime * current_sensitivity.z);
-            if (app->getKeyboard().isPressed(GLFW_KEY_D)) characterPos += glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
-            if (app->getKeyboard().isPressed(GLFW_KEY_A)) characterPos -= glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+
+            glm::vec3 movement(0.0f);
+            if (app->getKeyboard().isPressed(GLFW_KEY_W)) {
+                movement += movementDirection;
+                cameraPosition += movementDirection * (deltaTime * current_sensitivity.z);
+            }
+            if (app->getKeyboard().isPressed(GLFW_KEY_S)) {
+                movement -= movementDirection;
+                cameraPosition -= movementDirection * (deltaTime * current_sensitivity.z);
+            }
+            if (app->getKeyboard().isPressed(GLFW_KEY_D)) {
+                movement += glm::cross(movementDirection, up);
+                cameraPosition += glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+            }
+            if (app->getKeyboard().isPressed(GLFW_KEY_A)){
+                movement -= glm::cross(movementDirection, up);
+                cameraPosition -= glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+            }
+
+            characterPos += movement * (deltaTime * current_sensitivity.z);
+            if (glm::length(movement)) {
+                float characterRotation = atan2(movement.x, movement.z);
+                characterEntity->localTransform.rotation = glm::vec3(0.0f, characterRotation, 0.0f);
+            }
 
         }
 
