@@ -19,101 +19,8 @@ namespace our
     };
     class CollisionSystem
     {
-    private:
-        std::unordered_map<Entity*, bool> boxLanded;
-
     public:
-        void update(World* world, float deltaTime)
-        {
-            Entity* player = findPlayer(world);
-            if (!player)
-                return;
 
-            for (auto entity : world->getEntities())
-            {
-                if (entity != player)
-                {
-                    CollisionSide side = checkCollision(player, entity);
-                    if (side != CollisionSide::NONE)
-                    {
-                        handleCollision(player, entity, side, deltaTime);
-                    }
-                }
-            }
-            cleanupBoxStates(world);
-
-            handleBoxLandCollision(world);
-        }
-
-        void handleBoxLandCollision(World* world)
-        {
-            std::vector<Entity*> boxes;
-            std::vector<Entity*> grounds;
-
-            // Gather all boxes and grounds
-            for (auto entity : world->getEntities())
-            {
-                if (entity->name == "box")
-                {
-                    boxes.push_back(entity);
-                }
-                else if (entity->name == "groundEarth")
-                {
-                    grounds.push_back(entity);
-                }
-            }
-
-            // For each box
-            for (auto box : boxes)
-            {
-                bool intersectsGround = false;
-
-                // Check if box intersects with any ground
-                for (auto ground : grounds)
-                {
-                    if (checkCollision(box, ground) != CollisionSide::NONE)
-                    {
-                        intersectsGround = true;
-                        break;
-                    }
-                }
-
-                // If not intersecting and hasn't already dropped
-                if (!intersectsGround && !boxLanded[box])
-                {
-                    // std::cout << "Box is floating — applying gravity effect once!\n";
-                    box->localTransform.position.y -= 1.0f; // Decrease Y once
-                    boxLanded[box] = true;
-                }
-            }
-        }
-
-        void cleanupBoxStates(World* world)
-        {
-            for (auto it = boxLanded.begin(); it != boxLanded.end();)
-            {
-                if (std::find(world->getEntities().begin(), world->getEntities().end(), it->first) == world->getEntities().end())
-                {
-                    it = boxLanded.erase(it);
-                }
-                else
-                {
-                    ++it;
-                }
-            }
-        }
-
-        Entity* findPlayer(World* world)
-        {
-            for (auto entity : world->getEntities())
-            {
-                if (entity->getComponent<FreeMovementComponent>())
-                {
-                    return entity;
-                }
-            }
-            return nullptr;
-        }
 
         CollisionSide checkCollision(Entity* player, Entity* entity)
         {
@@ -212,51 +119,6 @@ namespace our
                 pos += entity->parent->localTransform.position;
             }
             return pos;
-        }
-
-        void moveBox(Entity* other, CollisionSide side, float deltaTime) {
-            std::cout << "Player collided with box on side: ";
-            switch (side)
-            {
-            case CollisionSide::LEFT: std::cout << "LEFT"; break;
-            case CollisionSide::RIGHT: std::cout << "RIGHT"; break;
-            case CollisionSide::FRONT: std::cout << "FRONT"; break;
-            case CollisionSide::BACK: std::cout << "BACK"; break;
-            }
-            std::cout << std::endl;
-
-            // Push the box in the opposite direction of collision
-            glm::vec3 pushDirection(0.0f);
-            float pushSpeed = 4.0f; // Adjust as needed
-
-            switch (side)
-            {
-            case CollisionSide::LEFT:  pushDirection.x = 1.0f; break; // Push left
-            case CollisionSide::RIGHT: pushDirection.x = -1.0f;  break; // Push right
-            case CollisionSide::FRONT:  pushDirection.z = 1.0f; break; // Push forward
-            case CollisionSide::BACK:   pushDirection.z = -1.0f;  break; // Push backward
-            }
-
-            other->localTransform.position += pushDirection * pushSpeed * deltaTime;
-        }
-
-        void handleCollision(Entity* player, Entity* other, CollisionSide side, float deltaTime)
-        {
-
-            if (other->name == "box" && !boxLanded[other])
-            {
-                moveBox(other, side, deltaTime);
-            }
-            else if (other->name == "trap")
-            {
-                // Trap logic here
-                std::cout << "Player collided with trap!" << std::endl;
-            }
-            else if (other->name == "groundEarth")
-            {
-                // Enemy logic here
-                // std::cout << "Player collided with groundEarth!" << std::endl;
-            }
         }
     };
 } // namespace our
