@@ -172,7 +172,7 @@
                 "position": [
                     0,
                     0.7,
-                    0
+                    10
                 ],
                 "rotation": [
                     0,
@@ -230,9 +230,9 @@
                     {
                         "type": "Collision",
                         "size": [
-                            6.8,
+                            6,
                             4,
-                            6.5
+                            6
                         ],
                         "anchor": "center"
                     }
@@ -332,9 +332,9 @@
                     {
                         "type": "Collision",
                         "size": [
-                            6.8,
+                            6,
                             4,
-                            6.5
+                            6
                         ],
                         "anchor": "center"
                     }
@@ -468,9 +468,9 @@
                     {
                         "type": "Collision",
                         "size": [
-                            6.8,
+                            6,
                             4,
-                            6.5
+                            6
                         ],
                         "anchor": "center"
                     }
@@ -638,9 +638,9 @@
                     {
                         "type": "Collision",
                         "size": [
-                            6.8,
+                            6,
                             4,
-                            6.5
+                            6
                         ],
                         "anchor": "center"
                     }
@@ -740,9 +740,9 @@
                     {
                         "type": "Collision",
                         "size": [
-                            6.8,
+                            6,
                             4,
-                            6.5
+                            6
                         ],
                         "anchor": "center"
                     }
