@@ -15,15 +15,5 @@ namespace our
         angularVelocity = glm::radians(data.value("angularVelocity", angularVelocity));
 
         // Deserialize boundaries if they exist
-        if (data.contains("boundaries"))
-        {
-            auto boundaries = data["boundaries"];
-            minBoundaries.x = boundaries["x"][0];
-            maxBoundaries.x = boundaries["x"][1];
-            minBoundaries.y = boundaries["y"][0];
-            maxBoundaries.y = boundaries["y"][1];
-            minBoundaries.z = boundaries["z"][0];
-            maxBoundaries.z = boundaries["z"][1];
         }
-    }
 }

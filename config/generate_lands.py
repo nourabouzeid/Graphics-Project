@@ -177,7 +177,7 @@ def generate_scene():
 
         if i < len(positions)-1:
             # Box8
-            box_pos = [pos[0]+2 ,pos[1]+1.1, pos[2]]
+            box_pos = [pos[0] ,pos[1]+1.1, pos[2]]
             world.append({
                 "position": round_vector(box_pos),
                 "rotation": [0, 0, 0],
@@ -199,7 +199,7 @@ def generate_scene():
             })
             traps = generate_traps_for_island(pos)
             world.extend(traps)
-        else:
+        if i == len(positions)-1:
             world.append({
                 "position": [pos[0], 1.5, pos[2]],
                 "rotation": [0, 0, 0],

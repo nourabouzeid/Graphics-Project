@@ -237,6 +237,11 @@ namespace our
                 // Enemy logic here
                 // std::cout << "Player collided with groundEarth!" << std::endl;
             }
+            else if (other->name == "key")
+            {
+                std::cout << "Player win !" << std::endl;
+            }
+           
         }
     };
 } // namespace our
