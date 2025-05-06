@@ -1,780 +1,488 @@
 {
-    "start-scene": "play",
-    "window": {
-        "title": "Push Box Game",
-        "size": {
-            "width": 1280,
-            "height": 720
-        },
-        "fullscreen": false
+  "start-scene": "play",
+  "window": {
+    "title": "Push Box Game",
+    "size": {
+      "width": 1280,
+      "height": 720
     },
-    "scene": {
-        "renderer": {
-            "sky": "assets/textures/sky.png",
-            "postprocess": "assets/shaders/postprocess/distortion.frag"
+    "fullscreen": false
+  },
+  "scene": {
+    "renderer": {
+      "sky": "assets/textures/sky.png",
+      "postprocess": "assets/shaders/postprocess/distortion.frag"
+    },
+    "assets": {
+      "shaders": {
+        "tinted": {
+          "vs": "assets/shaders/tinted.vert",
+          "fs": "assets/shaders/tinted.frag"
         },
-        "assets": {
-            "shaders": {
-                "tinted": {
-                    "vs": "assets/shaders/tinted.vert",
-                    "fs": "assets/shaders/tinted.frag"
-                },
-                "textured": {
-                    "vs": "assets/shaders/textured.vert",
-                    "fs": "assets/shaders/textured.frag"
-                },
-                "lit": {
-                    "vs": "assets/shaders/light/light.vert",
-                    "fs": "assets/shaders/light/light.frag"
-                }
-            },
-            "textures": {
-                "character": "assets/textures/colormap.png",
-                "groundEarth": "assets/textures/ground_new6.jpg",
-                "boxAlbedo": "assets/textures/wood/albedo.jpg",
-                "box": "assets/textures/box2.jpg",
-                "boxRoughness": "assets/textures/wood/roughness.jpg",
-                "boxSpecular": "assets/textures/wood/specular.jpg",
-                "key": "assets/textures/gold.png",
-                "trap": "assets/textures/trap2.jpg"
-            },
-            "meshes": {
-                "character": "assets/models/character-male-a.obj",
-                "groundEarth": "assets/models/ground_new6.obj",
-                "box": "assets/models/box2.obj",
-                "key": "assets/models/key2.obj",
-                "trap": "assets/models/trap2.obj"
-            },
-            "samplers": {
-                "default": {},
-                "pixelated": {
-                    "MAG_FILTER": "GL_NEAREST"
-                }
-            },
-            "materials": {
-                "character": {
-                    "type": "lit",
-                    "shader": "lit",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "albedoMap": "character",
-                    "sampler": "default"
-                },
-                "groundEarth": {
-                    "type": "lit",
-                    "shader": "lit",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "albedoMap": "groundEarth",
-                    "sampler": "default"
-                },
-                "box": {
-                    "type": "lit",
-                    "shader": "lit",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "albedoMap": "box",
-                    "sampler": "default"
-                },
-                "key": {
-                    "type": "lit",
-                    "shader": "lit",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "albedoMap": "key",
-                    "sampler": "default"
-                },
-                "trap": {
-                    "type": "lit",
-                    "shader": "lit",
-                    "pipelineState": {
-                        "faceCulling": {
-                            "enabled": true
-                        },
-                        "depthTesting": {
-                            "enabled": true
-                        }
-                    },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "albedoMap": "trap",
-                    "sampler": "default"
-                }
-            }
+        "textured": {
+          "vs": "assets/shaders/textured.vert",
+          "fs": "assets/shaders/textured.frag"
         },
-        "world": [
-            {
-                "rotation": [
-                    -45,
-                    0,
-                    0
-                ],
-                "components": [
-                    {
-                        "type": "Light",
-                        "lightType": "directional",
-                        "color": [
-                            2,
-                            2,
-                            2
-                        ]
-                    }
-                ]
+        "lit": {
+          "vs": "assets/shaders/light/light.vert",
+          "fs": "assets/shaders/light/light.frag"
+        }
+      },
+      "textures": {
+        "character": "assets/textures/colormap.png",
+        "groundEarth": "assets/textures/ground_new6.jpg",
+        "boxAlbedo": "assets/textures/wood/albedo.jpg",
+        "box": "assets/textures/box2.jpg",
+        "boxRoughness": "assets/textures/wood/roughness.jpg",
+        "boxSpecular": "assets/textures/wood/specular.jpg",
+        "key": "assets/textures/gold.png",
+        "trap": "assets/textures/trap2.jpg"
+      },
+      "meshes": {
+        "character": "assets/models/character-male-a.obj",
+        "groundEarth": "assets/models/ground_new6.obj",
+        "box": "assets/models/box2.obj",
+        "key": "assets/models/key2.obj",
+        "trap": "assets/models/trap2.obj"
+      },
+      "samplers": {
+        "default": {},
+        "pixelated": {
+          "MAG_FILTER": "GL_NEAREST"
+        }
+      },
+      "materials": {
+        "character": {
+          "type": "lit",
+          "shader": "lit",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
             },
-            {
-                "position": [
-                    0,
-                    5,
-                    5
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "components": [
-                    {
-                        "type": "Camera"
-                    },
-                    {
-                        "type": "Free Camera Controller"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0.7,
-                    0
-                ],
-                "rotation": [
-                    0,
-                    180,
-                    0
-                ],
-                "scale": [
-                    1.3,
-                    1.3,
-                    1.3
-                ],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "character",
-                        "material": "character"
-                    },
-                    {
-                        "type": "Free Movement"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1,
-                            1,
-                            0.5
-                        ],
-                        "anchor": "bottom _center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0,
-                    0
-                ],
-                "rotation": [
-                    0,
-                    -12,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            6,
-                            4,
-                            6.5
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    2,
-                    1.1,
-                    0
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.1,
-                            1.1,
-                            1.1
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0.4,
-                    0.8,
-                    1.1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.7,
-                            0.2,
-                            0.7
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0.4,
-                    0.8,
-                    1.1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.7,
-                            0.2,
-                            0.7
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0,
-                    0,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    -12,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            6,
-                            4,
-                            6.5
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    2,
-                    1.1,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.1,
-                            1.1,
-                            1.1
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0.4,
-                    0.8,
-                    9.1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.7,
-                            0.2,
-                            0.7
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    0.4,
-                    0.8,
-                    9.1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.7,
-                            0.2,
-                            0.7
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -8,
-                    0,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    -12,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            6,
-                            4,
-                            6.5
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -6,
-                    1.1,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.1,
-                            1.1,
-                            1.1
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -7.6,
-                    0.8,
-                    9.1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.7,
-                            0.2,
-                            0.7
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -16,
-                    0,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    -12,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            6,
-                            4,
-                            6.5
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -14,
-                    1.1,
-                    8
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "box",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "box",
-                        "material": "box"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.1,
-                            1.1,
-                            1.1
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -15.6,
-                    0.8,
-                    9.1
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "trap",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "trap",
-                        "material": "trap"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            0.7,
-                            0.2,
-                            0.7
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -16,
-                    0,
-                    16
-                ],
-                "rotation": [
-                    0,
-                    -12,
-                    0
-                ],
-                "scale": [
-                    8,
-                    8,
-                    8
-                ],
-                "name": "groundEarth",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "groundEarth",
-                        "material": "groundEarth"
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            6,
-                            4,
-                            6.5
-                        ],
-                        "anchor": "center"
-                    }
-                ]
-            },
-            {
-                "position": [
-                    -16,
-                    1.5,
-                    16
-                ],
-                "rotation": [
-                    0,
-                    0,
-                    0
-                ],
-                "scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "name": "key",
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "key",
-                        "material": "key"
-                    },
-                    {
-                        "type": "Movement",
-                        "angularVelocity": [
-                            0,
-                            45,
-                            0
-                        ]
-                    },
-                    {
-                        "type": "Collision",
-                        "size": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "anchor": "center"
-                    }
-                ]
+            "depthTesting": {
+              "enabled": true
             }
+          },
+          "albedoMap": "character",
+          "sampler": "default"
+        },
+        "groundEarth": {
+          "type": "lit",
+          "shader": "lit",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
+            },
+            "depthTesting": {
+              "enabled": true
+            }
+          },
+          "tint": [1, 1, 1, 1],
+          "albedoMap": "groundEarth",
+          "sampler": "default"
+        },
+        "box": {
+          "type": "lit",
+          "shader": "lit",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
+            },
+            "depthTesting": {
+              "enabled": true
+            }
+          },
+          "tint": [1, 1, 1, 1],
+          "albedoMap": "box",
+          "sampler": "default"
+        },
+        "key": {
+          "type": "lit",
+          "shader": "lit",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
+            },
+            "depthTesting": {
+              "enabled": true
+            }
+          },
+          "tint": [1, 1, 1, 1],
+          "albedoMap": "key",
+          "sampler": "default"
+        },
+        "trap": {
+          "type": "lit",
+          "shader": "lit",
+          "pipelineState": {
+            "faceCulling": {
+              "enabled": true
+            },
+            "depthTesting": {
+              "enabled": true
+            }
+          },
+          "tint": [1, 1, 1, 1],
+          "albedoMap": "trap",
+          "sampler": "default"
+        }
+      }
+    },
+    "world": [
+      {
+        "rotation": [-45, 0, 0],
+        "components": [
+          {
+            "type": "Light",
+            "lightType": "directional",
+            "color": [2, 2, 2]
+          }
         ]
-    }
+      },
+      {
+        "position": [0, 5, 5],
+        "scale": [1, 1, 1],
+        "components": [
+          {
+            "type": "Camera"
+          },
+          {
+            "type": "Free Camera Controller"
+          }
+        ]
+      },
+      {
+        "position": [0, 0.7, 0],
+        "rotation": [0, 180, 0],
+        "scale": [1.3, 1.3, 1.3],
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "character",
+            "material": "character"
+          },
+          {
+            "type": "Free Movement"
+          },
+          {
+            "type": "Collision",
+            "size": [1, 1, 0.5],
+            "anchor": "bottom _center"
+          }
+        ]
+      },
+      {
+        "position": [0, 0, 0],
+        "rotation": [0, -12, 0],
+        "scale": [8, 8, 8],
+        "name": "groundEarth",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          },
+          {
+            "type": "Collision",
+            "size": [6, 4, 6.5],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [2, 1.1, 0],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "box",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "box",
+            "material": "box"
+          },
+          {
+            "type": "Collision",
+            "size": [1.1, 1.1, 1.1],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [0.4, 0.8, 1.1],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "trap",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          },
+          {
+            "type": "Collision",
+            "size": [0.7, 0.2, 0.7],
+            "anchor": "center"
+          },
+          {
+            "type": "Movement",
+            "linearVelocity": [0.5, 0, 0.5]
+          }
+        ]
+      },
+      {
+        "position": [0.4, 0.8, 1.1],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "trap",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          },
+          {
+            "type": "Collision",
+            "size": [0.7, 0.2, 0.7],
+            "anchor": "center"
+          },
+          {
+            "type": "Movement",
+            "linearVelocity": [0, 0, 1]
+          }
+        ]
+      },
+      {
+        "position": [0, 0, 8],
+        "rotation": [0, -12, 0],
+        "scale": [8, 8, 8],
+        "name": "groundEarth",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          },
+          {
+            "type": "Collision",
+            "size": [6, 4, 6.5],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [2, 1.1, 8],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "box",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "box",
+            "material": "box"
+          },
+          {
+            "type": "Collision",
+            "size": [1.1, 1.1, 1.1],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [0.4, 0.8, 9.1],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "trap",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          },
+          {
+            "type": "Collision",
+            "size": [0.7, 0.2, 0.7],
+            "anchor": "center"
+          },
+          {
+            "type": "Movement",
+            "linearVelocity": [1, 0, 0]
+          }
+        ]
+      },
+      {
+        "position": [0.4, 0.8, 9.1],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "trap",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          },
+          {
+            "type": "Collision",
+            "size": [0.7, 0.2, 0.7],
+            "anchor": "center"
+          },
+          {
+            "type": "Movement",
+            "linearVelocity": [0, 0, 1]
+          }
+        ]
+      },
+      {
+        "position": [-8, 0, 8],
+        "rotation": [0, -12, 0],
+        "scale": [8, 8, 8],
+        "name": "groundEarth",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          },
+          {
+            "type": "Collision",
+            "size": [6, 4, 6.5],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [-6, 1.1, 8],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "box",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "box",
+            "material": "box"
+          },
+          {
+            "type": "Collision",
+            "size": [1.1, 1.1, 1.1],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [-7.6, 0.8, 9.1],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "trap",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          },
+          {
+            "type": "Collision",
+            "size": [0.7, 0.2, 0.7],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [-16, 0, 8],
+        "rotation": [0, -12, 0],
+        "scale": [8, 8, 8],
+        "name": "groundEarth",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          },
+          {
+            "type": "Collision",
+            "size": [6, 4, 6.5],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [-14, 1.1, 8],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "box",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "box",
+            "material": "box"
+          },
+          {
+            "type": "Collision",
+            "size": [1.1, 1.1, 1.1],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [-15.6, 0.8, 9.1],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "trap",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "trap",
+            "material": "trap"
+          },
+          {
+            "type": "Collision",
+            "size": [0.7, 0.2, 0.7],
+            "anchor": "center"
+          },
+          {
+            "type": "Movement",
+            "linearVelocity": [1, 0, 0]
+          }
+        ]
+      },
+      {
+        "position": [-16, 0, 16],
+        "rotation": [0, -12, 0],
+        "scale": [8, 8, 8],
+        "name": "groundEarth",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "groundEarth",
+            "material": "groundEarth"
+          },
+          {
+            "type": "Collision",
+            "size": [6, 4, 6.5],
+            "anchor": "center"
+          }
+        ]
+      },
+      {
+        "position": [-16, 1.5, 16],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "name": "key",
+        "components": [
+          {
+            "type": "Mesh Renderer",
+            "mesh": "key",
+            "material": "key"
+          },
+          {
+            "type": "Movement",
+            "angularVelocity": [0, 45, 0]
+          },
+          {
+            "type": "Collision",
+            "size": [1.0, 1.0, 1.0],
+            "anchor": "center"
+          }
+        ]
+      }
+    ]
+  }
 }
