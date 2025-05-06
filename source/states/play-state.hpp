@@ -27,7 +27,7 @@ class Playstate : public our::State {
     our::FreeMovementSystem freeMovement;
     our::CollisionSystem collisionSystem;
 
-    float countdownTime = GAME_COUNTER_TIME;  
+    float countdownTime = GAME_COUNTER_TIME;
     bool isGameOver = false;
     our::TexturedMaterial* heartMaterial = nullptr;
     our::TexturedMaterial* timerMaterial = nullptr;
@@ -46,7 +46,7 @@ class Playstate : public our::State {
         heartMaterial->sampler = new our::Sampler();
         heartMaterial->sampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         heartMaterial->sampler->set(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        heartMaterial->tint = glm::vec4(1, 1, 1, 1); 
+        heartMaterial->tint = glm::vec4(1, 1, 1, 1);
 
         heartMaterial->pipelineState.blending.enabled = true;
         heartMaterial->pipelineState.blending.sourceFactor = GL_SRC_ALPHA;
@@ -84,7 +84,7 @@ class Playstate : public our::State {
             {{1, 0, 0}, {255,255,255,255}, {1, 1}, {0,0,1}},
             {{1, 1, 0}, {255,255,255,255}, {1, 0}, {0,0,1}},
             {{0, 1, 0}, {255,255,255,255}, {0, 0}, {0,0,1}},
-        }, {0, 1, 2, 2, 3, 0});
+            }, { 0, 1, 2, 2, 3, 0 });
 
 
         // We get the scene configuration from the app config
@@ -99,18 +99,19 @@ class Playstate : public our::State {
         }
         // We initialize the camera controller system since it needs a pointer to the app
         cameraController.enter(getApp());
-        freeMovement.enter(getApp());
+        freeMovement.enter(getApp(), &collisionSystem);
+        collisionSystem.setup(&renderer);
         // Then we initialize the renderer
         auto size = getApp()->getFrameBufferSize();
         renderer.initialize(size, config["renderer"]);
 
         countdownTime = GAME_COUNTER_TIME;
-        lives = 3;  
+        lives = 3;
         isGameOver = false;
 
         collisionSystem.onHitTrap = [this]() {
             this->decrementLife();
-        };
+            };
     }
 
     void onDraw(double deltaTime) override {
@@ -129,8 +130,8 @@ class Playstate : public our::State {
         cameraController.update(&world, (float)deltaTime);
         freeMovement.update(&world, (float)deltaTime);
         collisionSystem.update(&world, (float)deltaTime);
-            // And finally we use the renderer system to draw the scene
-            renderer.render(&world);
+        // And finally we use the renderer system to draw the scene
+        renderer.render(&world, (float)deltaTime);
 
         // Get a reference to the keyboard object
         auto& keyboard = getApp()->getKeyboard();
@@ -157,12 +158,12 @@ class Playstate : public our::State {
         float heartWidth = 60.0f;
         float spacing = 25.0f;
 
-        for(int i = 0; i < lives; ++i) {
+        for (int i = 0; i < lives; ++i) {
             float x = spacing + i * (heartHeight + spacing);
             float y = spacing;
-        
+
             glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0)) *
-                              glm::scale(glm::mat4(1.0f), glm::vec3(heartWidth, heartHeight, 1.0f));
+                glm::scale(glm::mat4(1.0f), glm::vec3(heartWidth, heartHeight, 1.0f));
 
             heartMaterial->setup();
             heartMaterial->shader->set("transform", VP * model);
@@ -178,6 +179,8 @@ class Playstate : public our::State {
         freeMovement.exit();
         // Clear the world
         world.clear();
+
+
         // and we delete all the loaded assets to free memory on the RAM and the VRAM
         our::clearAllAssets();
     }
@@ -186,23 +189,23 @@ class Playstate : public our::State {
         float charWidth = 30.0f * scale;
         float charHeight = 50.0f * scale;
         float spacing = 5.0f * scale;
-    
+
         for (char c : text) {
             if (digitTextures.count(c) == 0) continue;
-    
+
             glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0)) *
-                              glm::scale(glm::mat4(1.0f), glm::vec3(charWidth, charHeight, 1.0f));
-    
+                glm::scale(glm::mat4(1.0f), glm::vec3(charWidth, charHeight, 1.0f));
+
             timerMaterial->texture = digitTextures[c];
             timerMaterial->setup();
             timerMaterial->shader->set("transform", VP * model);
             quadMesh->draw();
-    
+
             x += charWidth + spacing;
         }
     }
 
-    public:
+public:
     void decrementLife() {
         // lives--;
         // if (lives > 0) {

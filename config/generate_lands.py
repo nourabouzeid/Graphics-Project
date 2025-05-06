@@ -100,6 +100,19 @@ def generate_scene():
     positions = island_position_from_path(path)
 
     world = []
+    #lighting
+
+    world.append({
+        "rotation": [-45, 0, 0],
+        "components": [
+            {
+                "type": "Light",
+                "lightType": "directional",
+                "color":[2,2,2]
+             }
+      
+        ]
+    })
 
     # Camera
     world.append({
@@ -222,7 +235,7 @@ def generate_scene():
         "scene": {
             "renderer": {
                 "sky": "assets/textures/sky.png",
-                "postprocess": "assets/shaders/postprocess/vignette.frag"
+                "postprocess": "assets/shaders/postprocess/distortion.frag"
             },
             "assets": {
             "shaders": {
@@ -233,12 +246,19 @@ def generate_scene():
                 "textured": {
                     "vs": "assets/shaders/textured.vert",
                     "fs": "assets/shaders/textured.frag"
+                },
+                "lit": {
+                    "vs": "assets/shaders/light/light.vert",
+                    "fs": "assets/shaders/light/light.frag"
                 }
             },
             "textures": {
                 "character": "assets/textures/colormap.png",
                 "groundEarth": "assets/textures/ground_new6.jpg",
+                "boxAlbedo": "assets/textures/wood/albedo.jpg",
                 "box": "assets/textures/box2.jpg",
+                "boxRoughness": "assets/textures/wood/roughness.jpg",
+                "boxSpecular": "assets/textures/wood/specular.jpg",
                 "key": "assets/textures/gold.png",
                 "trap": "assets/textures/trap2.jpg"
             },
@@ -257,8 +277,8 @@ def generate_scene():
             },
             "materials": {
                 "character": {
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lit",
+                    "shader": "lit",
                     "pipelineState": {
                         "faceCulling": {
                             "enabled": True
@@ -267,18 +287,12 @@ def generate_scene():
                             "enabled": True
                         }
                     },
-                    "tint": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "texture": "character",
+                    "albedoMap": "character",
                     "sampler": "default"
                 },
                 "groundEarth": {
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lit",
+                    "shader": "lit",
                     "pipelineState": {
                         "faceCulling": {
                             "enabled": True
@@ -293,12 +307,12 @@ def generate_scene():
                         1,
                         1
                     ],
-                    "texture": "groundEarth",
+                    "albedoMap": "groundEarth",
                     "sampler": "default"
                 },
                 "box": {
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lit",
+                    "shader": "lit",
                     "pipelineState": {
                         "faceCulling": {
                             "enabled": True
@@ -313,12 +327,12 @@ def generate_scene():
                         1,
                         1
                     ],
-                    "texture": "box",
+                    "albedoMap": "box",
                     "sampler": "default"
                 },
                 "key": {
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lit",
+                    "shader": "lit",
                     "pipelineState": {
                         "faceCulling": {
                             "enabled": True
@@ -333,12 +347,12 @@ def generate_scene():
                         1,
                         1
                     ],
-                    "texture": "key",
+                    "albedoMap": "key",
                     "sampler": "default"
                 },
                 "trap": {
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lit",
+                    "shader": "lit",
                     "pipelineState": {
                         "faceCulling": {
                             "enabled": True
@@ -353,7 +367,7 @@ def generate_scene():
                         1,
                         1
                     ],
-                    "texture": "trap",
+                    "albedoMap": "trap",
                     "sampler": "default"
                 }
             }

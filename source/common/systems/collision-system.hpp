@@ -7,41 +7,53 @@
 #include "../components/free-movement.hpp"
 #include <glm/glm.hpp>
 #include <iostream>
-
-class Playstate;
+#include "forward-renderer.hpp"
 
 namespace our
 {
+    enum class CollisionSide {
+        NONE,
+        LEFT,
+        RIGHT,
+        FRONT,
+        BACK
+    };
     class CollisionSystem
     {
-    public:
-        std::function<void()> onHitTrap;
+    private:
+        std::unordered_map<Entity*, bool> boxLanded;
+        ForwardRenderer* forwardRenderer;
 
-        void update(World *world, float deltaTime)
+    public:
+        void setup(ForwardRenderer* forwardRenderer) {
+            this->forwardRenderer = forwardRenderer;
+        }
+        void update(World* world, float deltaTime)
         {
-            Entity *player = findPlayer(world);
+            Entity* player = findPlayer(world);
             if (!player)
                 return;
 
             for (auto entity : world->getEntities())
             {
-                if (entity != player && checkCollision(player, entity))
+                if (entity != player)
                 {
-                    handleCollision(player, entity);
+                    CollisionSide side = checkCollision(player, entity);
+                    if (side != CollisionSide::NONE)
+                    {
+                        handleCollision(player, entity, side, deltaTime);
+                    }
                 }
             }
             cleanupBoxStates(world);
 
-            handleBoxLandCollision(world);
+            // handleBoxLandCollision(world);
         }
 
-    private:
-        std::unordered_map<Entity *, bool> boxLanded;
-
-        void handleBoxLandCollision(World *world)
+        void handleBoxLandCollision(World* world)
         {
-            std::vector<Entity *> boxes;
-            std::vector<Entity *> grounds;
+            std::vector<Entity*> boxes;
+            std::vector<Entity*> grounds;
 
             // Gather all boxes and grounds
             for (auto entity : world->getEntities())
@@ -64,7 +76,7 @@ namespace our
                 // Check if box intersects with any ground
                 for (auto ground : grounds)
                 {
-                    if (checkCollision(box, ground))
+                    if (checkCollision(box, ground) != CollisionSide::NONE)
                     {
                         intersectsGround = true;
                         break;
@@ -74,14 +86,14 @@ namespace our
                 // If not intersecting and hasn't already dropped
                 if (!intersectsGround && !boxLanded[box])
                 {
-                    std::cout << "Box is floating — applying gravity effect once!\n";
-                    // box->localTransform.position.y -= 1.0f; // Decrease Y once
-                    // boxLanded[box] = true;
+                    // std::cout << "Box is floating — applying gravity effect once!\n";
+                    box->localTransform.position.y -= 1.0f; // Decrease Y once
+                    boxLanded[box] = true;
                 }
             }
         }
 
-        void cleanupBoxStates(World *world)
+        void cleanupBoxStates(World* world)
         {
             for (auto it = boxLanded.begin(); it != boxLanded.end();)
             {
@@ -96,7 +108,7 @@ namespace our
             }
         }
 
-        Entity *findPlayer(World *world)
+        Entity* findPlayer(World* world)
         {
             for (auto entity : world->getEntities())
             {
@@ -108,22 +120,53 @@ namespace our
             return nullptr;
         }
 
-        bool checkCollision(Entity *player, Entity *entity)
+        CollisionSide checkCollision(Entity* player, Entity* entity)
         {
             auto aCollider = player->getComponent<CollisionComponent>();
             auto bCollider = entity->getComponent<CollisionComponent>();
             if (!aCollider || !bCollider)
-                return false;
+                return CollisionSide::NONE;
 
             auto [playerMin, playerMax] = calculateBounds(player);
             auto [entityMin, entityMax] = calculateBounds(entity);
 
-            return playerMax.x > entityMin.x && playerMin.x < entityMax.x &&
-                   playerMax.y > entityMin.y && playerMin.y < entityMax.y &&
-                   playerMax.z > entityMin.z && playerMin.z < entityMax.z;
+            if (playerMax.x <= entityMin.x || playerMin.x >= entityMax.x ||
+                playerMax.y <= entityMin.y || playerMin.y >= entityMax.y ||
+                playerMax.z <= entityMin.z || playerMin.z >= entityMax.z)
+                return  CollisionSide::NONE;
+
+            float xOverlap = std::min(playerMax.x, entityMax.x) - std::max(playerMin.x, entityMin.x);
+            float yOverlap = std::min(playerMax.y, entityMax.y) - std::max(playerMin.y, entityMin.y);
+            float zOverlap = std::min(playerMax.z, entityMax.z) - std::max(playerMin.z, entityMin.z);
+
+            // Determine the smallest overlap (the side we're colliding with)
+            if (xOverlap < zOverlap)
+            {
+                // Collision is primarily on X-axis (LEFT or RIGHT)
+                if (player->localTransform.position.x < entity->localTransform.position.x)
+                {
+                    return CollisionSide::LEFT;
+                }
+                else
+                {
+                    return CollisionSide::RIGHT;
+                }
+            }
+            else
+            {
+                // Collision is primarily on Z-axis (FRONT or BACK)
+                if (player->localTransform.position.z < entity->localTransform.position.z)
+                {
+                    return CollisionSide::FRONT;
+                }
+                else
+                {
+                    return CollisionSide::BACK;
+                }
+            }
         }
 
-        std::pair<glm::vec3, glm::vec3> calculateBounds(Entity *entity)
+        std::pair<glm::vec3, glm::vec3> calculateBounds(Entity* entity)
         {
             auto collider = entity->getComponent<CollisionComponent>();
             glm::vec3 pos = getWorldPosition(entity);
@@ -163,10 +206,10 @@ namespace our
                 break;
             }
 
-            return {minBound, maxBound};
+            return { minBound, maxBound };
         }
 
-        glm::vec3 getWorldPosition(Entity *entity)
+        glm::vec3 getWorldPosition(Entity* entity)
         {
             glm::vec3 pos = entity->localTransform.position;
             if (entity->parent)
@@ -176,23 +219,21 @@ namespace our
             return pos;
         }
 
-        void handleCollision(Entity *player, Entity *other)
+
+        void handleCollision(Entity* player, Entity* other, CollisionSide side, float deltaTime)
         {
 
-            if (other->name == "box")
-            {
 
-                std::cout << "Player collided with box!" << std::endl;
-            }
-            else if (other->name == "trap")
+            if (other->name == "trap")
             {
                 onHitTrap();
-                std::cout << "Player collided with trap!" << std::endl;
+                forwardRenderer->activatePostProcess(0.5);
+                // std::cout << "Player collided with trap!" << std::endl;
             }
             else if (other->name == "groundEarth")
             {
                 // Enemy logic here
-                std::cout << "Player collided with groundEarth!" << std::endl;
+                // std::cout << "Player collided with groundEarth!" << std::endl;
             }
         }
     };

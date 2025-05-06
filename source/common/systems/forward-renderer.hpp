@@ -41,6 +41,8 @@ namespace our
         TexturedMaterial* skyMaterial;
         // Objects used for Postprocessing
         GLuint postprocessFrameBuffer, postProcessVertexArray;
+        bool postProcessActive;
+        float postProcessDuration, postProcessTimer;
         Texture2D* colorTarget, * depthTarget;
         TexturedMaterial* postprocessMaterial;
     public:
@@ -50,8 +52,13 @@ namespace our
         // Clean up the renderer
         void destroy();
         // This function should be called every frame to draw the given world
-        void render(World* world);
+        void render(World* world, float deltaTime);
 
+        void activatePostProcess(float duration) {
+            postProcessActive = true;
+            postProcessDuration = duration;
+            postProcessTimer = duration;
+        }
 
     };
 

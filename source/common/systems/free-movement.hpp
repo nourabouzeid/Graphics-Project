@@ -3,8 +3,9 @@
 #include "../ecs/world.hpp"
 #include "../components/free-camera-controller.hpp"
 #include "../components/free-movement.hpp"
-
+#include "../components/collision.hpp"
 #include "../application.hpp"
+#include "collision-system.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
@@ -12,87 +13,249 @@
 #include <glm/gtx/fast_trigonometry.hpp>
 #include "../components/mesh-renderer.hpp"
 #include <iostream>
-namespace our
-{
+#include <vector>
+namespace our {
 
-    // The free camera controller system is responsible for moving every entity which contains a FreeCameraControllerComponent.
-    // This system is added as a slightly complex example for how use the ECS framework to implement logic. 
-    // For more information, see "common/components/free-camera-controller.hpp"
     class FreeMovementSystem {
         Application* app; // The application in which the state runs
+        CollisionSystem* collisionSystem; // The application in which the state runs
         float currPitch = -1;
+        std::unordered_map<Entity*, bool> boxLanded;
+        std::vector<Entity*> grounds;
+        std::vector<Entity*> boxes;
 
     public:
-        // When a state enters, it should call this function and give it the pointer to the application
-        void enter(Application* app) {
+        void enter(Application* app, CollisionSystem* collisionSystem) {
             this->app = app;
+            this->collisionSystem = collisionSystem;
         }
 
-        // This should be called every frame to update all entities containing a FreeCameraControllerComponent 
         void update(World* world, float deltaTime) {
-            // First of all, we search for an entity containing both a CameraComponent and a FreeCameraControllerComponent
-            // As soon as we find one, we break
             FreeCameraControllerComponent* controller = nullptr;
             FreeMovementComponent* character = nullptr;
             for (auto entity : world->getEntities()) {
-                if (!controller)
-                    controller = entity->getComponent<FreeCameraControllerComponent>();
-                if (!character)
-                    character = entity->getComponent<FreeMovementComponent>();
+                if (!controller) controller = entity->getComponent<FreeCameraControllerComponent>();
+                if (!character) character = entity->getComponent<FreeMovementComponent>();
                 if (controller && character) break;
             }
-            // If there is no entity with both a controllerComponent and a FreecontrollerControllerComponent, we can do nothing so we return
             if (!(controller && character)) return;
-            // Get the entity that we found via getOwner of controller (we could use controller->getOwner())
+
             Entity* entity = controller->getOwner();
             Entity* characterEntity = character->getOwner();
             glm::vec3& cameraPosition = entity->localTransform.position;
-
             glm::vec3& characterPos = characterEntity->localTransform.position;
-            glm::vec3 movementDirection = glm::normalize(characterPos-cameraPosition);
-            if (currPitch == -1)
-                currPitch = atan2(cameraPosition.y, glm::sqrt(cameraPosition.x * cameraPosition.x + cameraPosition.z * cameraPosition.z));
-            movementDirection.y *= sin(glm::radians(currPitch));
 
-            // We change the controller position based on the keys WASD/QE
-            // S & W moves the player back and forth
+            // Calculate movement direction (camera-relative)
+            glm::vec3 movementDirection = glm::normalize(glm::vec3(
+                characterPos.x - cameraPosition.x,
+                0.0f, // eliminate vertical component
+                characterPos.z - cameraPosition.z
+            ));
+            // Get camera axes for movement
             glm::mat4 matrix = entity->localTransform.toMat4();
             glm::vec3 front = glm::vec3(matrix * glm::vec4(0, 0, -1, 0)),
                 up = glm::vec3(matrix * glm::vec4(0, 1, 0, 0)),
                 right = glm::vec3(matrix * glm::vec4(1, 0, 0, 0));
             glm::vec3 current_sensitivity = character->positionSensitivity;
-
+            // Get camera forward vector from local transform
+            // Calculate intended movement
             glm::vec3 movement(0.0f);
-            if (app->getKeyboard().isPressed(GLFW_KEY_W)) {
-                movement += movementDirection;
-                cameraPosition += movementDirection * (deltaTime * current_sensitivity.z);
-            }
-            if (app->getKeyboard().isPressed(GLFW_KEY_S)) {
-                movement -= movementDirection;
-                cameraPosition -= movementDirection * (deltaTime * current_sensitivity.z);
-            }
-            if (app->getKeyboard().isPressed(GLFW_KEY_D)) {
-                movement += glm::cross(movementDirection, up);
-                cameraPosition += glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
-            }
-            if (app->getKeyboard().isPressed(GLFW_KEY_A)){
-                movement -= glm::cross(movementDirection, up);
-                cameraPosition -= glm::cross(movementDirection, up) * (deltaTime * current_sensitivity.x);
+            if (app->getKeyboard().isPressed(GLFW_KEY_W)) movement += movementDirection;
+            if (app->getKeyboard().isPressed(GLFW_KEY_S)) movement -= movementDirection;
+            if (app->getKeyboard().isPressed(GLFW_KEY_D)) movement += glm::cross(movementDirection, up);
+            if (app->getKeyboard().isPressed(GLFW_KEY_A)) movement -= glm::cross(movementDirection, up);
+
+            // Normalize and apply speedob
+            if (glm::length(movement) > 0.0f) {
+                movement = glm::normalize(movement) * (deltaTime * current_sensitivity.z);
             }
 
-            characterPos += movement * (deltaTime * current_sensitivity.z);
-            if (glm::length(movement)) {
+            // Store old position for collision rollback
+            glm::vec3 oldCharacterPos = characterPos;
+            glm::vec3 oldCameraPos = cameraPosition;
+
+            // Apply movement to character and camera
+            characterPos += movement;
+            cameraPosition += movement;
+
+            // Check for collisions after movement
+
+
+            for (auto entity : world->getEntities()) {
+                if (entity->name == "groundEarth")
+                    grounds.push_back(entity);
+
+                if (entity->name == "box")
+                    boxes.push_back(entity);
+            }
+
+
+            bool characterGroundCollision = false;
+            for (auto ground : grounds) {
+                characterGroundCollision |= collisionSystem->checkCollision(characterEntity, ground) != CollisionSide::NONE;
+            }
+
+
+            // Update character rotation if moving
+            if (glm::length(movement) > 0.0f) {
                 float characterRotation = atan2(movement.x, movement.z);
                 characterEntity->localTransform.rotation = glm::vec3(0.0f, characterRotation, 0.0f);
             }
 
+            bool characterBoxCollision = false;
+            CollisionSide boxCollisionSide = CollisionSide::NONE;
+
+            // Box handling
+            for (auto entity : world->getEntities())
+            {
+                if (entity != characterEntity)
+                {
+                    CollisionSide side = collisionSystem->checkCollision(characterEntity, entity);
+                    if (side != CollisionSide::NONE)
+                    {
+                        handleCollision(characterEntity, entity, side, deltaTime);
+                        if (entity->name == "box") {
+                            characterBoxCollision = true;
+                            boxCollisionSide = side;
+                        }
+                    }
+                }
+            }
+
+            if (!characterGroundCollision && !characterBoxCollision) {
+                characterPos = oldCharacterPos;
+                cameraPosition = oldCameraPos;
+            }
+
+            handleBoxMovement(world, boxCollisionSide);
+            cleanupBoxStates(world);
+
         }
 
-        // When the state exits, it should call this function to ensure the mouse is unlocked
+        void cleanupBoxStates(World* world)
+        {
+            for (auto it = boxLanded.begin(); it != boxLanded.end();)
+            {
+                if (std::find(world->getEntities().begin(), world->getEntities().end(), it->first) == world->getEntities().end())
+                {
+                    it = boxLanded.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
+            }
+
+
+            grounds.clear();
+            boxes.clear();
+        }
+
+
+        void moveBox(Entity* other, CollisionSide side, float deltaTime) {
+            // std::cout << "Player collided with box on side: ";
+            // switch (side)
+            // {
+            // case CollisionSide::LEFT: std::cout << "LEFT"; break;
+            // case CollisionSide::RIGHT: std::cout << "RIGHT"; break;
+            // case CollisionSide::FRONT: std::cout << "FRONT"; break;
+            // case CollisionSide::BACK: std::cout << "BACK"; break;
+            // }
+            // std::cout << std::endl;
+
+            // Push the box in the opposite direction of collision
+            glm::vec3 pushDirection(0.0f);
+            float pushSpeed = 4.0f; // Adjust as needed
+
+            switch (side)
+            {
+            case CollisionSide::LEFT:  pushDirection.x = 1.0f; break; // Push left
+            case CollisionSide::RIGHT: pushDirection.x = -1.0f;  break; // Push right
+            case CollisionSide::FRONT:  pushDirection.z = 1.0f; break; // Push forward
+            case CollisionSide::BACK:   pushDirection.z = -1.0f;  break; // Push backward
+            }
+
+            other->localTransform.position += pushDirection * pushSpeed * deltaTime;
+        }
+
+        void handleCollision(Entity* player, Entity* other, CollisionSide side, float deltaTime)
+        {
+
+            if (other->name == "box" && !boxLanded[other])
+            {
+                moveBox(other, side, deltaTime);
+            }
+        }
+
+        void handleBoxMovement(World* world, CollisionSide side)
+        {
+
+            if (side != CollisionSide::NONE) {
+                std::cout << "Player collided with box on side: ";
+                switch (side)
+                {
+                case CollisionSide::LEFT: std::cout << "LEFT"; break;
+                case CollisionSide::RIGHT: std::cout << "RIGHT"; break;
+                case CollisionSide::FRONT: std::cout << "FRONT"; break;
+                case CollisionSide::BACK: std::cout << "BACK"; break;
+                }
+                std::cout << std::endl;
+            }
+
+            // Gather all boxes and grounds
+            for (auto entity : world->getEntities())
+            {
+                if (entity->name == "box")
+                {
+                    boxes.push_back(entity);
+                }
+                else if (entity->name == "groundEarth")
+                {
+                    grounds.push_back(entity);
+                }
+            }
+
+            // For each box
+            for (auto box : boxes)
+            {
+                bool intersectsGround = false;
+
+                // Check if box intersects with any ground
+                for (auto ground : grounds)
+                {
+                    if (collisionSystem->checkCollision(box, ground) != CollisionSide::NONE)
+                    {
+                        intersectsGround = true;
+                        break;
+                    }
+                }
+
+                // If not intersecting and hasn't already dropped
+                if (!intersectsGround && !boxLanded[box])
+                {
+                    // std::cout << "Box is floating — applying gravity effect once!\n";                    
+                    box->localTransform.position.y -= 1.0f; // Decrease Y once
+
+                    switch (side) {
+                    case CollisionSide::FRONT:
+                        box->localTransform.position.z += 0.8f;
+                    case CollisionSide::BACK:
+                        box->localTransform.position.z -= 0.5f;
+                    case CollisionSide::RIGHT:
+                        box->localTransform.position.x -= 0.8f;
+                    case CollisionSide::LEFT:
+                        box->localTransform.position.x += 0.4f;
+                    default:
+                        break;
+                    }
+
+                    boxLanded[box] = true;
+                }
+            }
+        }
+
         void exit() {
-
+            // Cleanup if needed
         }
-
     };
-
 }
