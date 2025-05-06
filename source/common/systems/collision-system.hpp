@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include "forward-renderer.hpp"
+#include<functional>
 
 namespace our
 {
@@ -25,6 +26,7 @@ namespace our
         ForwardRenderer* forwardRenderer;
 
     public:
+        std::function<void()> onHitTrap;
         void setup(ForwardRenderer* forwardRenderer) {
             this->forwardRenderer = forwardRenderer;
         }
