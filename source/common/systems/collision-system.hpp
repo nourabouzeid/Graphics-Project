@@ -47,7 +47,7 @@ namespace our
             }
             cleanupBoxStates(world);
 
-            handleBoxLandCollision(world);
+            // handleBoxLandCollision(world);
         }
 
         void handleBoxLandCollision(World* world)
@@ -219,40 +219,12 @@ namespace our
             return pos;
         }
 
-        void moveBox(Entity* other, CollisionSide side, float deltaTime) {
-            std::cout << "Player collided with box on side: ";
-            switch (side)
-            {
-            case CollisionSide::LEFT: std::cout << "LEFT"; break;
-            case CollisionSide::RIGHT: std::cout << "RIGHT"; break;
-            case CollisionSide::FRONT: std::cout << "FRONT"; break;
-            case CollisionSide::BACK: std::cout << "BACK"; break;
-            }
-            std::cout << std::endl;
-
-            // Push the box in the opposite direction of collision
-            glm::vec3 pushDirection(0.0f);
-            float pushSpeed = 4.0f; // Adjust as needed
-
-            switch (side)
-            {
-            case CollisionSide::LEFT:  pushDirection.x = 1.0f; break; // Push left
-            case CollisionSide::RIGHT: pushDirection.x = -1.0f;  break; // Push right
-            case CollisionSide::FRONT:  pushDirection.z = 1.0f; break; // Push forward
-            case CollisionSide::BACK:   pushDirection.z = -1.0f;  break; // Push backward
-            }
-
-            other->localTransform.position += pushDirection * pushSpeed * deltaTime;
-        }
 
         void handleCollision(Entity* player, Entity* other, CollisionSide side, float deltaTime)
         {
 
-            if (other->name == "box" && !boxLanded[other])
-            {
-                moveBox(other, side, deltaTime);
-            }
-            else if (other->name == "trap")
+
+            if (other->name == "trap")
             {
                 // Trap logic here
                 forwardRenderer->activatePostProcess(0.5);
