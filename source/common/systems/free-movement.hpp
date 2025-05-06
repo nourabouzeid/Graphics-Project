@@ -13,7 +13,7 @@
 #include <glm/gtx/fast_trigonometry.hpp>
 #include "../components/mesh-renderer.hpp"
 #include <iostream>
-
+#include <vector>
 namespace our {
 
     class FreeMovementSystem {
@@ -75,26 +75,29 @@ namespace our {
             characterPos += movement;
             cameraPosition += movement;
 
-            // // Check for collisions after movement
-            // bool collided = false;
-            // for (auto other : world->getEntities()) {
-            //     if (other == characterEntity) continue; // Skip self
+            // Check for collisions after movement
+            
 
-            //     // Get collision system (assumes it exists in the world)
-            //     if (!collisionSystem) continue;
+            
 
-            //     CollisionSide side = collisionSystem->checkCollision(characterEntity, other);
-            //     if (side != CollisionSide::NONE && other->name == "box") {
-            //         collided = true;
-            //         break;
-            //     }
-            // }
+            std::vector<Entity*> grounds;
+            
+            for(auto entity: world->getEntities()){
+                if(entity->name == "groundEarth")
+                    grounds.push_back(entity);
+            }
 
-            // // If collided, revert movement
-            // if (collided) {
-            //     characterPos = oldCharacterPos;
-            //     cameraPosition = oldCameraPos;
-            // }
+            std::cout<<"grounds number = "<<grounds.size()<<"\n";
+            
+            bool collided = false;
+            for(auto ground:grounds){
+                collided |= collisionSystem->checkCollision(characterEntity, ground) != CollisionSide::NONE;
+            }
+
+            if(!collided){
+                characterPos = oldCharacterPos;
+                cameraPosition = oldCameraPos;
+            }
 
             // Update character rotation if moving
             if (glm::length(movement) > 0.0f) {
