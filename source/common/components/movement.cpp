@@ -26,4 +26,10 @@ namespace our
             maxBoundaries.z = boundaries["z"][1];
         }
     }
+    
+    void MovementComponent::setMovementBoundary(glm::vec3 minBoundary, glm::vec3 maxBoundary)
+    {
+        minBoundaries = minBoundary;
+        maxBoundaries = maxBoundary;
+    }
 }
