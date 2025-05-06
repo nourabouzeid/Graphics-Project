@@ -10,6 +10,7 @@
 #include <asset-loader.hpp>
 #include <systems/collision-system.hpp>
 #include <unordered_map>
+#include <json/json.hpp>
 
 #include <iomanip>
 #include <sstream>
@@ -31,12 +32,14 @@ class Playstate : public our::State {
     bool isGameOver = false;
     our::TexturedMaterial* heartMaterial = nullptr;
     our::TexturedMaterial* timerMaterial = nullptr;
+    std::unordered_map<char, our::Texture2D*> digitTextures;
     our::Mesh* quadMesh = nullptr;
     int lives = 3;
 
-    std::unordered_map<char, our::Texture2D*> digitTextures;
+    bool softReset = false;
 
     void onInitialize() override {
+        std::cout<<"Initializing Play!\n";
         heartMaterial = new our::TexturedMaterial();
         heartMaterial->shader = new our::ShaderProgram();
         heartMaterial->shader->attach("assets/shaders/textured.vert", GL_VERTEX_SHADER);
@@ -90,9 +93,10 @@ class Playstate : public our::State {
         // We get the scene configuration from the app config
         auto& config = getApp()->getConfig()["scene"];
         // If we have assets in the scene config, we deserialize them
-        if (config.contains("assets")) {
+        if (config.contains("assets") && !softReset) {
             our::deserializeAllAssets(config["assets"]);
         }
+        softReset = false;
         // If we have a world in the scene config, we use it to populate our world
         if (config.contains("world")) {
             world.deserialize(config["world"]);
@@ -118,6 +122,7 @@ class Playstate : public our::State {
     }
 
     void onDraw(double deltaTime) override {
+        std::cout<<"Drawing play!\n";
         if (isGameOver) return;
 
         // Update the countdown timer
@@ -125,6 +130,7 @@ class Playstate : public our::State {
         if (countdownTime <= 0) {
             countdownTime = GAME_COUNTER_TIME;
             isGameOver = true;
+            world.clearEntities();
             getApp()->changeState("game-over");
         }
 
@@ -141,6 +147,7 @@ class Playstate : public our::State {
 
         if (keyboard.justPressed(GLFW_KEY_ESCAPE)) {
             // If the escape  key is pressed in this frame, go to the play state
+            world.clearEntities();
             getApp()->changeState("menu");
         }
 
@@ -210,21 +217,22 @@ class Playstate : public our::State {
 
 public:
     void decrementLife() {
-        // lives--;
-        // if (lives > 0) {
-        //     // world.clearEntities();
-        //     // auto& config = getApp()->getConfig()["scene"];
-        //     // world.deserialize(config["world"]);
-        //     // std::cout<<"Restarting world!\n";
-        // } else {
-        //     isGameOver = true;
-        getApp()->changeState("game-over");
-        // }
+        lives--;
+        if (lives > 0) {
+            // world.clearEntities();
+            // auto& config = getApp()->getConfig()["scene"];
+            // world.deserialize(config["world"]);
+            // std::cout<<"Restarting world!\n";
+        } else {
+            isGameOver = true;
+            world.clearEntities();
+            getApp()->changeState("game-over");
+        }
 
-        // world.clearEntities();
-        // auto& config = getApp()->getConfig()["scene"];
-        // our::deserializeAllAssets(config["assets"]);
+        // config["world"][2]["position"] = nlohmann::json::array({0, 0.7, 0});
         // world.deserialize(config["world"]);
+        // softReset = true;
+        // onInitialize();
         // std::cout<<"Restarting world!\n";
     }
 
