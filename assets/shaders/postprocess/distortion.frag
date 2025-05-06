@@ -1,19 +1,50 @@
 #version 330 core
 
-in vec2 tex_coord;
+uniform sampler2D tex;
+uniform float time;                 
+uniform float intensity;                 
+uniform vec2 screenSize;                 
 
-// This will be used to sample a color from the off-screen framebuffer on which we draw our scene.
-uniform sampler2D color_sampler;
-// This will be used to distort our texture coordinates to get an underwater look.
-uniform sampler2D distortion_sampler;
-// This controls how much the texture coordinates will be distorted. 0 means no distortion.
-uniform float distortion_power;
-
-out vec4 frag_color;
+in vec2 texCoords;
+out vec4 fragColor;
 
 void main() {
-    // First, we sample a distortion value from the distortion texture, we then subtract 0.5 such that the values are centered around 0 then we apply the power.
-    vec2 distortion = (texture(distortion_sampler, tex_coord).xy - 0.5f) * distortion_power;
-    // Before sampling the scene color, we add the distortion to sample a color from a slightly different location thus causing the distorted look.
-    frag_color = texture(color_sampler, tex_coord + distortion);
+    // Sample original color
+    vec3 color = texture(tex, texCoords).rgb;
+    
+    // Create blood-red vignette effect
+    vec2 uv = texCoords * 2.0 - 1.0;  // Convert to [-1,1] range
+    float vignette = 1.0 - dot(uv, uv) * 0.5;  // Circular falloff
+    
+    // Pulsing effect based on time
+    float pulse = sin(time * 10.0) * 0.1 + 0.9;
+    
+    // Blood color with vignette
+    vec3 damageColor = mix(
+        vec3(0.7, 0.1, 0.1),  // Dark red
+        vec3(1.0, 0.3, 0.3),  // Bright red
+        pulse * vignette
+    );
+    
+    // Edge detection for extra effect (optional)
+    float edge = 0.0;
+    vec2 pixelSize = 1.0 / screenSize;
+    for (int x = -1; x <= 1; x++) {
+        for (int y = -1; y <= 1; y++) {
+            if (x == 0 && y == 0) continue;
+            vec2 offset = vec2(x, y) * pixelSize * 2.0;
+            edge += length(color - texture(tex, texCoords + offset).rgb);
+        }
+    }
+    edge = clamp(edge * 0.5, 0.0, 0.3);
+    
+    // Combine effects
+    fragColor = vec4(
+        mix(
+            color,
+            mix(damageColor, vec3(1.0, 0.5, 0.5), edge),
+            intensity  // Controls overall strength
+        ),
+        1.0
+    );
 }

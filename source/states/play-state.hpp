@@ -35,6 +35,7 @@ class Playstate : public our::State {
         // We initialize the camera controller system since it needs a pointer to the app
         cameraController.enter(getApp());
         freeMovement.enter(getApp(), &collisionSystem);
+        collisionSystem.setup(&renderer);
         // Then we initialize the renderer
         auto size = getApp()->getFrameBufferSize();
         renderer.initialize(size, config["renderer"]);
@@ -47,7 +48,7 @@ class Playstate : public our::State {
         freeMovement.update(&world, (float)deltaTime);
         collisionSystem.update(&world, (float)deltaTime);
         // And finally we use the renderer system to draw the scene
-        renderer.render(&world);
+        renderer.render(&world, (float)deltaTime);
 
         // Get a reference to the keyboard object
         auto& keyboard = getApp()->getKeyboard();

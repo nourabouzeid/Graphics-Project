@@ -5,9 +5,8 @@
 namespace our
 {
 
-    void CollisionComponent::deserialize(const nlohmann::json &data)
+    void CollisionComponent::deserialize(const nlohmann::json& data)
     {
-        std::cout << "Deserializing CollisionComponent" << std::endl;
         if (!data.is_object())
             return;
 
@@ -24,9 +23,9 @@ namespace our
             anchor = Anchor::TOP_RIGHT;
         else if (anchorStr == "bottom_center")
             anchor = Anchor::BOTTOM_CENTER;
-       
-           
-     
+
+
+
         else
             anchor = Anchor::CENTER;
     }

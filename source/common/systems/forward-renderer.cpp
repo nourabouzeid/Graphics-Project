@@ -125,7 +125,7 @@ namespace our
         }
     }
 
-    void ForwardRenderer::render(World* world)
+    void ForwardRenderer::render(World* world, float deltaTime)
     {
         std::vector<light_utils::LightCommand> lightCommands;
         // First of all, we search for a camera and for all the mesh renderers
@@ -200,7 +200,7 @@ namespace our
         glDepthMask(GL_TRUE);
 
         // If there is a postprocess material, bind the framebuffer
-        if (postprocessMaterial)
+        if (postprocessMaterial && postProcessActive)
         {
             // TODO: (Req 11) bind the framebuffer
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, postprocessFrameBuffer);
@@ -275,15 +275,35 @@ namespace our
             command.mesh->draw();
         }
         // If there is a postprocess material, apply postprocessing
-        if (postprocessMaterial)
+
+        if (postprocessMaterial && postProcessActive)
         {
             // TODO: (Req 11) Return to the default framebuffer
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
             // TODO: (Req 11) Setup the postprocess material and draw the fullscreen triangle
             postprocessMaterial->setup();
+            float intensity = 0;
+
+            if (postProcessActive) {
+                postProcessTimer -= deltaTime;
+                intensity = postProcessTimer / postProcessDuration;
+                if (postProcessTimer <= 0)
+                {
+                    postProcessActive = false;
+                }
+
+            }
+
+            static float totalTime = 0.0f;
+            totalTime += deltaTime;
+            postprocessMaterial->shader->set("intensity", intensity);
+            postprocessMaterial->shader->set("time", totalTime);
+            postprocessMaterial->shader->set("screenSize", windowSize);
             glBindVertexArray(postProcessVertexArray);
             glDrawArrays(GL_TRIANGLES, 0, 3);
+
+
         }
     }
 

@@ -8,21 +8,21 @@
 #include <application.hpp>
 
 // This state tests and shows how to use the Forward renderer.
-class RendererTestState: public our::State {
+class RendererTestState : public our::State {
 
     our::World world;
     our::ForwardRenderer renderer;
-    
+
     void onInitialize() override {
         // First of all, we get the scene configuration from the app config
         auto& config = getApp()->getConfig()["scene"];
         // If we have assets in the scene config, we deserialize them
-        if(config.contains("assets")){
+        if (config.contains("assets")) {
             our::deserializeAllAssets(config["assets"]);
         }
 
         // If we have a world in the scene config, we use it to populate our world
-        if(config.contains("world")){
+        if (config.contains("world")) {
             world.deserialize(config["world"]);
         }
 
@@ -32,7 +32,7 @@ class RendererTestState: public our::State {
 
     void onDraw(double deltaTime) override {
         // We simply call the renderer's "render" function and it should do all the rendering work
-        renderer.render(&world);
+        renderer.render(&world, (float)deltaTime);
     }
 
     void onDestroy() override {

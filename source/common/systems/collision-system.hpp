@@ -7,6 +7,7 @@
 #include "../components/free-movement.hpp"
 #include <glm/glm.hpp>
 #include <iostream>
+#include "forward-renderer.hpp"
 
 namespace our
 {
@@ -21,8 +22,12 @@ namespace our
     {
     private:
         std::unordered_map<Entity*, bool> boxLanded;
+        ForwardRenderer* forwardRenderer;
 
     public:
+        void setup(ForwardRenderer* forwardRenderer) {
+            this->forwardRenderer = forwardRenderer;
+        }
         void update(World* world, float deltaTime)
         {
             Entity* player = findPlayer(world);
@@ -250,7 +255,8 @@ namespace our
             else if (other->name == "trap")
             {
                 // Trap logic here
-                std::cout << "Player collided with trap!" << std::endl;
+                forwardRenderer->activatePostProcess(0.5);
+                // std::cout << "Player collided with trap!" << std::endl;
             }
             else if (other->name == "groundEarth")
             {

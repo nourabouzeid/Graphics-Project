@@ -235,7 +235,7 @@ def generate_scene():
         "scene": {
             "renderer": {
                 "sky": "assets/textures/sky.png",
-                "postprocess": "assets/shaders/postprocess/vignette.frag"
+                "postprocess": "assets/shaders/postprocess/distortion.frag"
             },
             "assets": {
             "shaders": {
