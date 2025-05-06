@@ -226,7 +226,7 @@ def generate_scene():
             })
 
     return {
-        "start-scene": "play",
+        "start-scene": "menu",
         "window": {
             "title": "Push Box Game",
             "size": {"width": 1280, "height": 720},
