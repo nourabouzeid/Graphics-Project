@@ -43,18 +43,18 @@ namespace our {
             glm::vec3& characterPos = characterEntity->localTransform.position;
 
             // Calculate movement direction (camera-relative)
-            glm::vec3 movementDirection = glm::normalize(characterPos - cameraPosition);
-            if (currPitch == -1)
-                currPitch = atan2(cameraPosition.y, glm::sqrt(cameraPosition.x * cameraPosition.x + cameraPosition.z * cameraPosition.z));
-            movementDirection.y *= sin(glm::radians(currPitch));
-
+            glm::vec3 movementDirection = glm::normalize(glm::vec3(
+                characterPos.x - cameraPosition.x,
+                0.0f, // eliminate vertical component
+                characterPos.z - cameraPosition.z
+            ));
             // Get camera axes for movement
             glm::mat4 matrix = entity->localTransform.toMat4();
             glm::vec3 front = glm::vec3(matrix * glm::vec4(0, 0, -1, 0)),
                 up = glm::vec3(matrix * glm::vec4(0, 1, 0, 0)),
                 right = glm::vec3(matrix * glm::vec4(1, 0, 0, 0));
             glm::vec3 current_sensitivity = character->positionSensitivity;
-
+            // Get camera forward vector from local transform
             // Calculate intended movement
             glm::vec3 movement(0.0f);
             if (app->getKeyboard().isPressed(GLFW_KEY_W)) movement += movementDirection;
