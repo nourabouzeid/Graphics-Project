@@ -15,7 +15,6 @@ namespace our
     class CollisionSystem
     {
     public:
-        // Playstate* playState;
         std::function<void()> onHitTrap;
 
         void update(World *world, float deltaTime)

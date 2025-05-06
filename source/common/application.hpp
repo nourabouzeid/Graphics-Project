@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <type_traits>
 #include <json/json.hpp>
+#include <fstream>
 
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
@@ -121,6 +122,14 @@ namespace our {
         [[nodiscard]] const Mouse& getMouse() const { return mouse; }
 
         [[nodiscard]] const nlohmann::json& getConfig() const { return app_config; }
+
+        [[nodiscard]] const nlohmann::json& rereadConfig() { 
+            // std::string config_path = args.get<std::string>("c", "config/generated_game.jsonc");
+            std::string config_path = "config/generated_game.jsonc";
+            std::ifstream file_in(config_path);
+            app_config = nlohmann::json::parse(file_in, nullptr, true, true);
+            return app_config; 
+        }
 
         // Get the size of the frame buffer of the window in pixels.
         glm::ivec2 getFrameBufferSize() {

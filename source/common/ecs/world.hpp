@@ -70,6 +70,15 @@ namespace our {
             }
         }
 
+        void clearEntities() {
+            // Delete all entities and ensure both containers are empty
+            for (Entity* entity : entities) {
+                delete entity;
+            }
+            entities.clear();
+            markedForRemoval.clear();
+        }
+
         //Since the world owns all of its entities, they should be deleted alongside it.
         ~World() {
             clear();
