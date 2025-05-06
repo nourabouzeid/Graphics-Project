@@ -20,6 +20,8 @@ namespace our {
 
         // Reads linearVelocity & angularVelocity from the given json object
         void deserialize(const nlohmann::json& data) override;
+
+        void setMovementBoundary(glm::vec3 minBoundary, glm::vec3 maxBoundary);
     };
 
 }
