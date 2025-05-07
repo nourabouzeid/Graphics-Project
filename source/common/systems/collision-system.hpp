@@ -241,7 +241,7 @@ namespace our
             else if (other->name == "key")
             {
                 onHitKey();
-                std::cout << "Player win !" << std::endl;
+                // std::cout << "Player win !" << std::endl;
             }
            
         }
