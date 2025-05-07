@@ -27,6 +27,7 @@ namespace our
 
     public:
         std::function<void()> onHitTrap;
+        std::function<void()> onHitKey;
         void setup(ForwardRenderer* forwardRenderer) {
             this->forwardRenderer = forwardRenderer;
         }
@@ -239,6 +240,7 @@ namespace our
             }
             else if (other->name == "key")
             {
+                onHitKey();
                 std::cout << "Player win !" << std::endl;
             }
            

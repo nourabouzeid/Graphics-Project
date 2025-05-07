@@ -112,6 +112,9 @@ class Playstate : public our::State {
         collisionSystem.onHitTrap = [this]() {
             this->decrementLife();
             };
+        collisionSystem.onHitKey = [this]() {
+            this->winGame();
+        };
     }
 
     void onDraw(double deltaTime) override {
@@ -223,5 +226,11 @@ public:
         // our::deserializeAllAssets(config["assets"]);
         // world.deserialize(config["world"]);
         // std::cout<<"Restarting world!\n";
+    }
+
+    void winGame() {
+        // isGameOver = true;
+        getApp()->changeState("win");
+        world.clearEntities();
     }
 };
