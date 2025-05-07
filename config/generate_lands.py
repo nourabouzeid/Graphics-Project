@@ -138,6 +138,11 @@ def generate_scene():
              {
                         "type": "Free Movement"
             },
+                                {
+                    "type": "Light",
+                    "lightType": "point",
+                    "color": [2,2,2]
+                    },
                {
       "type": "Collision",
       "size": [1, 1,0.5],
@@ -257,7 +262,8 @@ def generate_scene():
                 "groundEarth": "assets/textures/ground_new6.jpg",
                 "boxAlbedo": "assets/textures/wood/albedo.jpg",
                 "box": "assets/textures/box2.jpg",
-                "boxRoughness": "assets/textures/wood/roughness.jpg",
+                "boxRoughness": "assets/textures/wood/roughness.png",
+                "boxAmbient": "assets/textures/wood/ambient.png",
                 "boxSpecular": "assets/textures/wood/specular.jpg",
                 "key": "assets/textures/gold.png",
                 "trap": "assets/textures/trap2.jpg"
@@ -327,7 +333,11 @@ def generate_scene():
                         1,
                         1
                     ],
+                    "albedoTint":[0.4,0.4,0.4],
                     "albedoMap": "box",
+                    "roughnessMap": "boxRoughness",
+                    "ambientMap": "boxAmbient",
+                    "specularMap": "boxSpecular",
                     "sampler": "default"
                 },
                 "key": {

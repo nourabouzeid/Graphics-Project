@@ -33,7 +33,8 @@
         "groundEarth": "assets/textures/ground_new6.jpg",
         "boxAlbedo": "assets/textures/wood/albedo.jpg",
         "box": "assets/textures/box2.jpg",
-        "boxRoughness": "assets/textures/wood/roughness.jpg",
+        "boxRoughness": "assets/textures/wood/roughness.png",
+        "boxAmbient": "assets/textures/wood/ambient.png",
         "boxSpecular": "assets/textures/wood/specular.jpg",
         "key": "assets/textures/gold.png",
         "trap": "assets/textures/trap2.jpg"
@@ -93,7 +94,11 @@
             }
           },
           "tint": [1, 1, 1, 1],
+          "albedoTint":[0.4,0.4,0.4],
           "albedoMap": "box",
+          "roughnessMap": "boxRoughness",
+          "ambientMap": "boxAmbient",
+          "specularMap": "boxSpecular",
           "sampler": "default"
         },
         "key": {
@@ -480,7 +485,12 @@
             "type": "Collision",
             "size": [1.0, 1.0, 1.0],
             "anchor": "center"
-          }
+          },
+          {
+            "type": "Light",
+            "lightType": "point",
+            "color": [2,2,2]
+            }
         ]
       }
     ]
