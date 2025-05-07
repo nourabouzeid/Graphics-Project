@@ -217,23 +217,27 @@ class Playstate : public our::State {
 
 public:
     void decrementLife() {
-        lives--;
-        if (lives > 0) {
-            // world.clearEntities();
-            // auto& config = getApp()->getConfig()["scene"];
-            // world.deserialize(config["world"]);
-            // std::cout<<"Restarting world!\n";
-        } else {
-            isGameOver = true;
-            world.clearEntities();
-            getApp()->changeState("game-over");
-        }
+        // lives--;
+        // if (lives > 0) {
+        //     // world.clearEntities();
+        //     // auto& config = getApp()->getConfig()["scene"];
+        //     // world.deserialize(config["world"]);
+        //     // std::cout<<"Restarting world!\n";
+        // } else {
+        //     isGameOver = true;
+        //     world.clearEntities();
+        //     getApp()->changeState("game-over");
+        // }
+
+        isGameOver = true;
+        getApp()->changeState("game-over");
+        world.clearEntities();
 
         // config["world"][2]["position"] = nlohmann::json::array({0, 0.7, 0});
         // world.deserialize(config["world"]);
         // softReset = true;
         // onInitialize();
-        // std::cout<<"Restarting world!\n";
+        std::cout<<"Restarting world!\n";
     }
 
     void winGame() {
