@@ -353,7 +353,6 @@ int our::Application::run(int run_for_frames)
 
         if (nextState) {
             stateChangePending = true;
-            nextState->onInitialize();  // Try to initialize the next state
         }
 
         ++current_frame;
