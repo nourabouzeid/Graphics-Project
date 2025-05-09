@@ -219,12 +219,19 @@ public:
     void decrementLife() {
         isGameOver = true;
         getApp()->changeState("game-over");
-        world.clearEntities();
+        
+        for(auto entity : world.getEntities()){
+            world.markForRemoval(entity);
+        }
+
     }
 
     void winGame() {
         isGameOver = true;
         getApp()->changeState("win");
-        world.clearEntities();
+        
+        for(auto entity : world.getEntities()){
+            world.markForRemoval(entity);
+        }
     }
 };

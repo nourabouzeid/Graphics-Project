@@ -31,6 +31,7 @@ namespace our {
         }
 
         void update(World* world, float deltaTime) {
+
             FreeCameraControllerComponent* controller = nullptr;
             FreeMovementComponent* character = nullptr;
             for (auto entity : world->getEntities()) {

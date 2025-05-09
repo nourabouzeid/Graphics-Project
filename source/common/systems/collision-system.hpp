@@ -49,8 +49,9 @@ namespace our
                 }
             }
             cleanupBoxStates(world);
-
             // handleBoxLandCollision(world);
+
+            world->deleteMarkedEntities();
         }
 
         void handleBoxLandCollision(World* world)
