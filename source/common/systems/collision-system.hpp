@@ -45,6 +45,8 @@ namespace our
                     if (side != CollisionSide::NONE)
                     {
                         handleCollision(player, entity, side, deltaTime);
+                        if(entity->name == "trap")
+                            break;
                     }
                 }
             }

@@ -121,7 +121,7 @@ namespace our {
         Mouse& getMouse() { return mouse; }
         [[nodiscard]] const Mouse& getMouse() const { return mouse; }
 
-        [[nodiscard]] const nlohmann::json& getConfig(int level) const { return app_config_list[level]; }
+        [[nodiscard]] const nlohmann::json& getConfig(int level=0) const { return app_config_list[level]; }
 
         [[nodiscard]] const nlohmann::json& rereadConfig(int level) { 
             // std::string config_path = args.get<std::string>("c", "config/generated_game.jsonc");

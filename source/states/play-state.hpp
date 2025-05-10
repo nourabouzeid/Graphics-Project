@@ -35,10 +35,13 @@ class Playstate : public our::State {
     std::unordered_map<char, our::Texture2D*> digitTextures;
     our::Mesh* quadMesh = nullptr;
     int lives = 3;
+    int level = 0;
+    const int MAX_LEVELS = 3;
 
     bool softReset = false;
 
     void onInitialize() override {
+        std::cout<<"lives = "<<lives;
         std::cout<<"Initializing Play!\n";
         heartMaterial = new our::TexturedMaterial();
         heartMaterial->shader = new our::ShaderProgram();
@@ -90,39 +93,51 @@ class Playstate : public our::State {
             }, { 0, 1, 2, 2, 3, 0 });
 
 
+        cameraController.enter(getApp());
+        freeMovement.enter(getApp(), &collisionSystem);
+        collisionSystem.setup(&renderer);
+
+        loadConfig();
+        // We initialize the camera controller system since it needs a pointer to the app
+        // Then we initialize the renderer
+        // auto size = getApp()->getFrameBufferSize();
+        // renderer.initialize(size, config["renderer"]);
+
+        countdownTime = GAME_COUNTER_TIME;
+        isGameOver = false;
+
+        collisionSystem.onHitTrap = [this]() {
+            lives--;
+            this->decrementLife();
+            };
+        collisionSystem.onHitKey = [this]() {
+            level++;
+            if(level < MAX_LEVELS)
+                this->nextLevel();
+            else
+                this->winGame();
+        };
+    }
+
+    void loadConfig(){
         // We get the scene configuration from the app config
-        auto& config = getApp()->getConfig()["scene"];
+        auto& config = getApp()->getConfig(level)["scene"];
         // If we have assets in the scene config, we deserialize them
         if (config.contains("assets") && !softReset) {
             our::deserializeAllAssets(config["assets"]);
         }
-        softReset = false;
+        softReset = true;
         // If we have a world in the scene config, we use it to populate our world
         if (config.contains("world")) {
             world.deserialize(config["world"]);
         }
-        // We initialize the camera controller system since it needs a pointer to the app
-        cameraController.enter(getApp());
-        freeMovement.enter(getApp(), &collisionSystem);
-        collisionSystem.setup(&renderer);
-        // Then we initialize the renderer
         auto size = getApp()->getFrameBufferSize();
         renderer.initialize(size, config["renderer"]);
 
-        countdownTime = GAME_COUNTER_TIME;
-        lives = 3;
-        isGameOver = false;
-
-        collisionSystem.onHitTrap = [this]() {
-            this->decrementLife();
-            };
-        collisionSystem.onHitKey = [this]() {
-            this->winGame();
-        };
     }
 
     void onDraw(double deltaTime) override {
-        std::cout<<"Drawing play!\n";
+        // std::cout<<"Drawing play!\n";
         if (isGameOver) return;
 
         // Update the countdown timer
@@ -217,8 +232,13 @@ class Playstate : public our::State {
 
 public:
     void decrementLife() {
-        isGameOver = true;
-        getApp()->changeState("game-over");
+        std::cout<<"in decrement life, lives = "<<lives<<"\n";
+        if(lives >= 0)
+            getApp()->changeState("play");
+        else{
+            isGameOver = true;
+            getApp()->changeState("game-over");
+        }
         
         for(auto entity : world.getEntities()){
             world.markForRemoval(entity);
@@ -227,11 +247,20 @@ public:
     }
 
     void winGame() {
+        level = 0;
         isGameOver = true;
         getApp()->changeState("win");
+        for(auto entity : world.getEntities()){
+            world.markForRemoval(entity);
+        }
+    }
+
+    void nextLevel(){
+        getApp()->changeState("play");
         
         for(auto entity : world.getEntities()){
             world.markForRemoval(entity);
         }
+
     }
 };
