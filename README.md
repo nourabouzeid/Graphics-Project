@@ -6,19 +6,19 @@
 
 <div align="center">
     <h3> Menu screen </h3>
-   <img align="center" width=100% src="assets/textures/menu.jpeg" alt="Team image">
+   <img align="center" width=100% src="assets/textures/menu.jpeg" alt="menu screen">
 </div>
 <hr/>
 
 <div align="center">
     <h3> Push the blocks, reach the key, claim your win!</h3>
-   <img align="center" width=100% src="screenshots/game_scene_level_1.png" alt="Team image">
+   <img align="center" width=100% src="docs/game_scene_level_1.png" alt="game scene">
 </div>
 <hr/>
 
 <div align="center">
     <h3> Think you're skilled enough to dodge traps and escape this fate?</h3>
-   <img align="center" width=100% src="assets/textures/game-over.jpeg" alt="Team image">
+   <img align="center" width=100% src="assets/textures/game-over.jpeg" alt="game over">
 </div>
 
 <div >
