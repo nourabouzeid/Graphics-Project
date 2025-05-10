@@ -25,27 +25,40 @@ int main(int argc, char **argv)
     flags::args args(argc, argv); // Parse the command line arguments
     // config_path is the path to the json file containing the application configuration
     // Default: "config/app.json"
-    std::string config_path = args.get<std::string>("c", "config/generated_game.jsonc");
-    // run_for_frames is how many frames to run the application before automatically closing
-    // This is useful for testing multiple configurations in a batch
-    // Default: 0 where the application runs indefinitely until manually closed
-    int run_for_frames = args.get<int>("f", 0);
 
-    // Open the config file and exit if failed
-    std::ifstream file_in(config_path);
-    if (!file_in)
-    {
-        std::cerr << "Couldn't open file: " << config_path << std::endl;
+    // Assume a flag like -s scenes.txt is used to specify the scene list file
+    std::string scene_list_file = args.get<std::string>("s", "config/levels_list.txt");
+
+    // Open the scene list file
+    std::ifstream list_file(scene_list_file);
+    if (!list_file) {
+        std::cerr << "Couldn't open scene list file: " << scene_list_file << std::endl;
         return -1;
     }
-    // Read the file into a json object then close the file
-    nlohmann::json app_config = nlohmann::json::parse(file_in, nullptr, true, true);
-    file_in.close();
 
+    std::vector<nlohmann::json> app_config_list;
+    std::string path;
+    while (std::getline(list_file, path)) {
+        if (path.empty()) continue; // skip empty lines
+        std::ifstream file_in(path);
+        if (!file_in) {
+            std::cerr << "Couldn't open file: " << path << std::endl;
+            return -1;
+        }
+
+        try {
+            app_config_list.push_back(nlohmann::json::parse(file_in, nullptr, true, true));
+        } catch (const nlohmann::json::parse_error& e) {
+            std::cerr << "Failed to parse JSON from " << path << ": " << e.what() << std::endl;
+            return -1;
+        }
+        file_in.close();
+    }
     // Create the application
-    our::Application app(app_config);
+    int run_for_frames = args.get<int>("f", 0);
 
-    // Register all the states of the project in the application
+    our::Application app(app_config_list);
+
     app.registerState<Menustate>("menu");
     app.registerState<Playstate>("play");
     app.registerState<GameOverState>("game-over");
@@ -60,13 +73,10 @@ int main(int argc, char **argv)
     app.registerState<EntityTestState>("entity-test");
     app.registerState<RendererTestState>("renderer-test");
 
-    // Then choose the state to run based on the option "start-scene" in the config
-    if (app_config.contains(std::string{"start-scene"}))
-    {
-        app.changeState(app_config["start-scene"].get<std::string>());
+    // Use first config to determine start-scene (can be changed to loop if needed)
+    if (app_config_list.size() > 0 && app_config_list[0].contains("start-scene")) {
+        app.changeState(app_config_list[0]["start-scene"].get<std::string>());
     }
 
-    // Finally run the application
-    // Here, the application loop will run till the terminatio condition is statisfied
     return app.run(run_for_frames);
 }
