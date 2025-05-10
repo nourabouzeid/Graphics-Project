@@ -61,7 +61,7 @@ namespace our {
         Keyboard keyboard;                  // Instance of "our" keyboard class that handles keyboard functionalities.
         Mouse mouse;                        // Instance of "our" mouse class that handles mouse functionalities.
 
-        nlohmann::json app_config;           // A Json file that contains all application configuration
+        std::vector<nlohmann::json> app_config_list;           // A Json file that contains all application configuration
 
         std::unordered_map<std::string, State*> states;   // This will store all the states that the application can run
         State * currentState = nullptr;         // This will store the current scene that is being run
@@ -77,7 +77,7 @@ namespace our {
     public:
 
         // Create an application with following configuration
-        Application(const nlohmann::json& app_config) : app_config(app_config) {}
+        Application(const std::vector<nlohmann::json> & app_config_list) : app_config_list(app_config_list) {}
         // On destruction, delete all the states
         ~Application(){ for (auto &it : states) delete it.second; }
 
@@ -121,14 +121,14 @@ namespace our {
         Mouse& getMouse() { return mouse; }
         [[nodiscard]] const Mouse& getMouse() const { return mouse; }
 
-        [[nodiscard]] const nlohmann::json& getConfig() const { return app_config; }
+        [[nodiscard]] const nlohmann::json& getConfig(int level=0) const { return app_config_list[level]; }
 
-        [[nodiscard]] const nlohmann::json& rereadConfig() { 
+        [[nodiscard]] const nlohmann::json& rereadConfig(int level) { 
             // std::string config_path = args.get<std::string>("c", "config/generated_game.jsonc");
             std::string config_path = "config/generated_game.jsonc";
             std::ifstream file_in(config_path);
-            app_config = nlohmann::json::parse(file_in, nullptr, true, true);
-            return app_config; 
+            app_config_list[level] = nlohmann::json::parse(file_in, nullptr, true, true);
+            return app_config_list[level]; 
         }
 
         // Get the size of the frame buffer of the window in pixels.

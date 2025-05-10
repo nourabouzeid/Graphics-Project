@@ -154,7 +154,7 @@ void our::Application::configureOpenGL()
 
 our::WindowConfiguration our::Application::getWindowConfiguration()
 {
-    auto window_config = app_config["window"];
+    auto window_config = app_config_list[0]["window"];
     std::string title = window_config["title"].get<std::string>();
 
     int width = window_config["size"]["width"].get<int>();
@@ -237,7 +237,7 @@ int our::Application::run(int run_for_frames)
         ScreenshotRequest,
         std::vector<ScreenshotRequest>,
         std::greater<ScreenshotRequest>> requested_screenshots;
-    if (auto& screenshots = app_config["screenshots"]; screenshots.is_object()) {
+    if (auto& screenshots = app_config_list[0]["screenshots"]; screenshots.is_object()) {
         auto base_path = std::filesystem::path(screenshots.value("directory", "screenshots"));
         if (auto& requests = screenshots["requests"]; requests.is_array()) {
             for (auto& item : requests) {

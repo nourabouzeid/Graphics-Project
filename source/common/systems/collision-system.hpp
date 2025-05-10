@@ -27,6 +27,7 @@ namespace our
 
     public:
         std::function<void()> onHitTrap;
+        std::function<void()> onHitKey;
         void setup(ForwardRenderer* forwardRenderer) {
             this->forwardRenderer = forwardRenderer;
         }
@@ -44,12 +45,15 @@ namespace our
                     if (side != CollisionSide::NONE)
                     {
                         handleCollision(player, entity, side, deltaTime);
+                        if(entity->name == "trap")
+                            break;
                     }
                 }
             }
             cleanupBoxStates(world);
-
             // handleBoxLandCollision(world);
+
+            world->deleteMarkedEntities();
         }
 
         void handleBoxLandCollision(World* world)
@@ -237,6 +241,12 @@ namespace our
                 // Enemy logic here
                 // std::cout << "Player collided with groundEarth!" << std::endl;
             }
+            else if (other->name == "key")
+            {
+                onHitKey();
+                // std::cout << "Player win !" << std::endl;
+            }
+           
         }
     };
 } // namespace our

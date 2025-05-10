@@ -101,8 +101,6 @@ set(COMMON_SOURCES
         source/common/systems/free-movement.hpp
         source/common/systems/movement.hpp
       
-        source/common/systems/sound.hpp
-        source/common/systems/sound.cpp
         source/common/systems/collision-system.hpp
 
       
