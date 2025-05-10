@@ -137,6 +137,7 @@ class Playstate : public our::State {
     }
 
     void onDraw(double deltaTime) override {
+        std::cout<<"Drawing play!\n";
         if (isGameOver) return;
 
         // Update the countdown timer
