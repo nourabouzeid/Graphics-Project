@@ -40,7 +40,7 @@ You land in a strange world made of floating islands. Your goal is to push boxes
 
 ### 🎮 Game Engine & Architecture
 
-- Built from scratch using **C++17** and **OpenGL**.
+- Built using **C++17** and **OpenGL**.
 - Modular **Entity-Component-System (ECS)** architecture.
 - Scene data defined in **JSON files**, no hardcoded objects.
 
