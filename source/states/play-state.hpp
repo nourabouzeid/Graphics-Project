@@ -137,7 +137,6 @@ class Playstate : public our::State {
     }
 
     void onDraw(double deltaTime) override {
-        // std::cout<<"Drawing play!\n";
         if (isGameOver) return;
 
         // Update the countdown timer
@@ -232,7 +231,6 @@ class Playstate : public our::State {
 
 public:
     void decrementLife() {
-        std::cout<<"in decrement life, lives = "<<lives<<"\n";
         if(lives >= 0)
             getApp()->changeState("play");
         else{
